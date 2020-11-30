@@ -32,8 +32,10 @@ git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$
 if [ -f ~/.zshrc ] ; then
     cp ~/.zshrc ~/.zshrc.bak
 fi
-ln -s ./.zshrc ~/.zshrc
-ln -s ./.p10k.zsh ~/.p10k.zsh
+cp .p10k.zsh ~/.p10k.zsh
+
+# TODO: install Meslo Nerd Font
+# https://github.com/romkatv/powerlevel10k#oh-my-zsh
 
 
 echo "Configuring vim..."
