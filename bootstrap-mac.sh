@@ -45,5 +45,7 @@ vim +PluginInstall +qall
 cd ~/.vim/bundle/YouCompleteMe
 python setup.py
 
+ln -s ./.ideavimrc ~/.ideavimrc
+
 
 echo "All done!. Remember to run 'p10k configure' to install Meslo Nerd font for powerline10k."
