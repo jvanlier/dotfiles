@@ -71,6 +71,9 @@ export PATH="$PYENV_ROOT/bin:${PATH}"
 eval "$(pyenv init --path)"
 eval "$(pyenv virtualenv-init -)"
 
+# Pipx:
+export PATH="$HOME/.local/bin:$PATH"
+
 # Poetry:
 export PATH="$HOME/.poetry/bin:$PATH"
 alias pr="poetry run"
