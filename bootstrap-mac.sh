@@ -46,20 +46,6 @@ cp .p10k.zsh ~/.p10k.zsh
 # Vim
 echo -e "\nConfiguring vim..."
 
-if [ ! -d ${HOME}/.vim/bundle ]; then
-    brew install vim  # default vim has no Python3 support, brew verson does
-    source ~/.zshrc  # reload PATH to pick up brew version
-    echo "Installing Vundle with YouCompleteMe"
-    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-    vim +PluginInstall +qall
-    brew install cmake  # needed to compile YCM
-    pushd ${HOME}/.vim/bundle/YouCompleteMe
-    python install.py
-    popd
-else
-    echo "Vundle already installed, skipping installation of Vundle and YouCompleteMe"
-fi
-
 if [ -f ~/.vimrc ]; then
     VIMRC_BAK="${HOME}/.vimrc.bak.${TS}"
     echo "Copying old ~/.vimrc to $VIMRC_BAK"
@@ -68,6 +54,19 @@ fi
 
 cp .vimrc ~/.vimrc
 cp .ideavimrc ~/.ideavimrc
+
+if [ ! -d ${HOME}/.vim/bundle ]; then
+    brew install vim  # default vim has no Python3 support, brew verson does
+    echo "Installing Vundle with YouCompleteMe"
+    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+    /opt/homebrew/bin/vim +PluginInstall +qall
+    brew install cmake  # needed to compile YCM
+    pushd ${HOME}/.vim/bundle/YouCompleteMe
+    python install.py
+    popd
+else
+    echo "Vundle already installed, skipping installation of Vundle and YouCompleteMe"
+fi
 
 # Enable repeating keys (disable the popup to select diacritics etc):
 defaults write -g ApplePressAndHoldEnabled -bool false
