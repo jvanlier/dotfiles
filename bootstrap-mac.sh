@@ -17,6 +17,10 @@ else
 fi
 
 
+# Various Homebrew-installable tools.
+brew install jq gnu-sed htop
+
+
 # Pyenv
 echo "Checking for pyenv..."
 if ! command -v pyenv > /dev/null ; then
@@ -85,9 +89,9 @@ fi
 # Enable repeating keys (disable the popup to select diacritics etc):
 defaults write -g ApplePressAndHoldEnabled -bool false
 
-echo -e "\nAll done! Running zsh now."
+echo -e "\nAll done!"
 echo "If this is the first time installing powerline10k, run 'p10k configure' to install Meslo Nerd font."
-echo "You will also have to reboot to enable repeating keys."
+echo -e "You will also have to reboot to enable repeating keys.\n\nRunning zsh now..."
 
 zsh
 
