@@ -1,9 +1,21 @@
 #!/usr/bin/env /bin/bash
 set -eu
 
-PY3_VERSION="3.10.4"
+PY3_VERSION="3.10.6"
 BASE_VENV="base-${PY3_VERSION}"
 TS=$(date +'%Y-%m-%dT%H-%M-%S')
+
+
+# Homebrew
+echo "Checking for Homebrew..."
+if ! command -v brew > /dev/null ; then
+    echo "Looks like homebrew is not installed, proceeding with install."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+else
+    echo "Homebrew seems to be installed, trying to update.."
+    brew update
+fi
+
 
 # Pyenv
 echo "Checking for pyenv..."
@@ -19,6 +31,7 @@ PYTHON_CONFIGURE_OPTS="--enable-framework" pyenv install -s $PY3_VERSION
 pyenv global $PY3_VERSION
 pip install --upgrade pip
 pip install --upgrade pipx
+
 
 # Zsh
 echo -e "\nChecking for oh my zsh..."
@@ -42,6 +55,7 @@ if [ -f ~/.zshrc ]; then
 fi
 cp .zshrc ~/.zshrc
 cp .p10k.zsh ~/.p10k.zsh
+
 
 # Vim
 echo -e "\nConfiguring vim..."
