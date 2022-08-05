@@ -18,14 +18,20 @@ fi
 
 
 # Various Homebrew-installable tools.
-brew install jq gnu-sed htop
-
+brew install \
+        vim `# default vim has no Python3 support, brew verson does` \
+	jq \
+	gnu-sed `# default sed differs from Linux equivalent` \
+	htop \
+	rectangle `# replacement for ShiftIt` \
+	cmake `# to compile Vim YouCompleteMe, among other things` \ 
+	postgresql `# requirement for pip install psycopg2-binary` \
+	libjpeg `# requirement for pip install pillow`
 
 # Pyenv
 echo "Checking for pyenv..."
 if ! command -v pyenv > /dev/null ; then
     echo "Looks like pyenv is not installed, proceeding with install through brew."
-    brew update
     brew install pyenv pyenv-virtualenv
 else
     echo "pyenv seems to be installed"
@@ -74,11 +80,9 @@ cp .vimrc ~/.vimrc
 cp .ideavimrc ~/.ideavimrc
 
 if [ ! -d ${HOME}/.vim/bundle ]; then
-    brew install vim  # default vim has no Python3 support, brew verson does
     echo "Installing Vundle with YouCompleteMe"
     git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
     /opt/homebrew/bin/vim +PluginInstall +qall
-    brew install cmake  # needed to compile YCM
     pushd ${HOME}/.vim/bundle/YouCompleteMe
     python install.py
     popd
