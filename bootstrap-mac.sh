@@ -26,7 +26,9 @@ brew install \
 	rectangle `# replacement for ShiftIt` \
 	cmake `# to compile Vim YouCompleteMe, among other things` \ 
 	postgresql `# requirement for pip install psycopg2-binary` \
-	libjpeg `# requirement for pip install pillow`
+	libjpeg `# requirement for pip install pillow` \
+	hadolint `# linter for Dockerfiles` \
+	dive `# useful tool to inspect docker images`
 
 # Pyenv
 echo "Checking for pyenv..."
