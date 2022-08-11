@@ -29,6 +29,8 @@ brew install \
 	libjpeg `# requirement for pip install pillow` \
 	hadolint `# linter for Dockerfiles` \
 	dive `# useful tool to inspect docker images`
+brew install --cask \
+	google-cloud-sdk
 
 # Pyenv
 echo "Checking for pyenv..."
