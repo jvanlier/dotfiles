@@ -28,7 +28,8 @@ brew install \
 	postgresql `# requirement for pip install psycopg2-binary` \
 	libjpeg `# requirement for pip install pillow` \
 	hadolint `# linter for Dockerfiles` \
-	dive `# useful tool to inspect docker images`
+	dive `# useful tool to inspect docker images` \
+	ncdu `# ncurses du (find big files/dirs fast)`
 brew install --cask \
 	google-cloud-sdk
 
