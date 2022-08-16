@@ -29,7 +29,8 @@ brew install \
 	libjpeg `# requirement for pip install pillow` \
 	hadolint `# linter for Dockerfiles` \
 	dive `# useful tool to inspect docker images` \
-	ncdu `# ncurses du (find big files/dirs fast)`
+	ncdu `# ncurses du (find big files/dirs fast)` \
+        kubectx `# kubectx and kubens, simplify k8s access`
 brew install --cask \
 	google-cloud-sdk
 
