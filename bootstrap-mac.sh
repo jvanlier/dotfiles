@@ -20,6 +20,7 @@ fi
 # Various Homebrew-installable tools.
 brew install \
         vim `# default vim has no Python3 support, brew verson does` \
+        fzf \
 	jq \
 	gnu-sed `# default sed differs from Linux equivalent` \
 	htop \
