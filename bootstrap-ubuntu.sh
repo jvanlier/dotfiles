@@ -2,34 +2,17 @@
 set -eu
 source bootstrap-common.sh
 
-# Homebrew
-echo "Checking for Homebrew..."
-if ! command -v brew > /dev/null ; then
-    echo "Looks like homebrew is not installed, proceeding with install."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-else
-    echo "Homebrew seems to be installed, trying to update.."
-    brew update
-fi
-
-
-# Various Homebrew-installable tools.
-brew install \
-        vim `# default vim has no Python3 support, brew verson does` \
+sudo apt update
+sudo apt install --yes \
+	zsh \
         fzf \
 	jq \
-	gnu-sed `# default sed differs from Linux equivalent` \
 	htop \
-	rectangle `# replacement for ShiftIt` \
-	cmake `# to compile Vim YouCompleteMe, among other things` \ 
-	postgresql `# requirement for pip install psycopg2-binary` \
-	libjpeg `# requirement for pip install pillow` \
-	hadolint `# linter for Dockerfiles` \
-	dive `# useful tool to inspect docker images` \
-	ncdu `# ncurses du (find big files/dirs fast)` \
-        kubectx `# kubectx and kubens, simplify k8s access`
-brew install --cask \
-	google-cloud-sdk
+	cmake `# to compile Vim YouCompleteMe, among other things` \
+	ncdu `# ncurses du (find big files/dirs fast)`
+
+# TODO from here
+exit
 
 # Pyenv
 echo "Checking for pyenv..."
@@ -55,9 +38,8 @@ if [ ! -d ${HOME}/.oh-my-zsh ]; then
     export RUNZSH=no  # by default, it runs zsh directly and this script does not continue 
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     echo "Installing oh-my-zsh plugins..."
-    git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${HOME}/.oh-my-zsh/custom/themes/powerlevel10k
-    git clone --depth=1 https://github.com/peterhurford/git-it-on.zsh ${HOME}/.oh-my-zsh/custom/plugins/git-it-on
+    git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 else
     echo "oh my zsh already installed, skipping"
 fi
