@@ -4,26 +4,34 @@ source bootstrap-common.sh
 
 sudo apt update
 sudo apt install --yes \
-	zsh \
-        fzf \
-	jq \
-	htop \
-	cmake `# to compile Vim YouCompleteMe, among other things` \
-	ncdu `# ncurses du (find big files/dirs fast)`
+    zsh \
+    fzf \
+    jq \
+    htop \
+    cmake `# to compile Vim YouCompleteMe, among other things` \
+    ncdu `# ncurses du (find big files/dirs fast)` \
+    `# all of the following is for pyenv installs` \
+    zlib1g-dev \
+    libffi-dev \ 
+    libssl-dev
 
-# TODO from here
-exit
+# The following appears to be optional for pyenv, add in case of trouble:
+# libbz2-dev, libsqlite3-dev, libncursesw5-dev, libreadline-gplv2-dev, liblz-dev
 
 # Pyenv
 echo "Checking for pyenv..."
-if ! command -v pyenv > /dev/null ; then
-    echo "Looks like pyenv is not installed, proceeding with install through brew."
-    brew install pyenv pyenv-virtualenv
+if [ ! -d "$HOME/.pyenv" ] ; then
+    echo "Looks like pyenv is not installed, proceeding with install"
+    curl https://pyenv.run | bash
 else
     echo "pyenv seems to be installed"
 fi
 
-PYTHON_CONFIGURE_OPTS="--enable-framework" pyenv install -s $PY3_VERSION
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+pyenv install -s $PY3_VERSION
 pyenv global $PY3_VERSION
 pip install --upgrade pip
 pip install --upgrade pipx
@@ -34,7 +42,6 @@ echo -e "\nChecking for oh my zsh..."
 
 if [ ! -d ${HOME}/.oh-my-zsh ]; then
     echo "Could not find oh-my-zsh dir. Installing..."
-    export CHSH=no  # chsh is no longer needed since MacOS Catalina
     export RUNZSH=no  # by default, it runs zsh directly and this script does not continue 
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     echo "Installing oh-my-zsh plugins..."
@@ -68,7 +75,7 @@ cp .ideavimrc ~/.ideavimrc
 if [ ! -d ${HOME}/.vim/bundle ]; then
     echo "Installing Vundle with YouCompleteMe"
     git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-    /opt/homebrew/bin/vim +PluginInstall +qall
+    vim +PluginInstall +qall
     pushd ${HOME}/.vim/bundle/YouCompleteMe
     python install.py
     popd
@@ -76,12 +83,10 @@ else
     echo "Vundle already installed, skipping installation of Vundle and YouCompleteMe"
 fi
 
-# Enable repeating keys (disable the popup to select diacritics etc):
-defaults write -g ApplePressAndHoldEnabled -bool false
 
 echo -e "\nAll done!"
 echo "If this is the first time installing powerline10k, run 'p10k configure' to install Meslo Nerd font."
-echo -e "You will also have to reboot to enable repeating keys.\n\nRunning zsh now..."
+echo -e "\n\nRunning zsh now..."
 
 zsh
 
