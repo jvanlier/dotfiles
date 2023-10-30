@@ -10,13 +10,17 @@ sudo apt install --yes \
     htop \
     cmake `# to compile Vim YouCompleteMe, among other things` \
     ncdu `# ncurses du (find big files/dirs fast)` \
-    `# all of the following is for pyenv installs` \
+    `# the following are required for pyenv installs` \
     zlib1g-dev \
-    libffi-dev \ 
-    libssl-dev
-
-# The following appears to be optional for pyenv, add in case of trouble:
-# libbz2-dev, libsqlite3-dev, libncursesw5-dev, libreadline-gplv2-dev, liblz-dev
+    libffi-dev \
+    libssl-dev \
+    `# the following are technically optional for pyenv installs, but often assumed to be present:` \
+    libbz2-dev \
+    libsqlite3-dev \
+    libncursesw5-dev \
+    libreadline-dev \
+    liblz-dev \
+    lzma-dev
 
 # Pyenv
 echo "Checking for pyenv..."
