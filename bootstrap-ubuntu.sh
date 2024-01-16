@@ -2,47 +2,49 @@
 set -eu
 source bootstrap-common.sh
 
-# Homebrew
-echo "Checking for Homebrew..."
-if ! command -v brew > /dev/null ; then
-    echo "Looks like homebrew is not installed, proceeding with install."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-else
-    echo "Homebrew seems to be installed, trying to update.."
-    brew update
+sudo apt update
+sudo apt install --yes \
+    zsh \
+    fzf \
+    jq \
+    htop \
+    cmake `# to compile Vim YouCompleteMe, among other things` \
+    ncdu `# ncurses du (find big files/dirs fast)`
+
+# Occasionally, I want to run this while inside a k8s pod. 
+# Then there's typically on need for pyenv.
+if [[ "${POD_NAME:=NONE}" == "NONE" ]] ; then
+    sudo apt install --yes \
+        `# the following are required for pyenv installs` \
+        zlib1g-dev \
+        libffi-dev \
+        libssl-dev \
+        `# the following are technically optional for pyenv installs, but often assumed to be present:` \
+        libbz2-dev \
+        libsqlite3-dev \
+        libncursesw5-dev \
+        libreadline-dev \
+        liblz-dev \
+        lzma-dev
+
+    # Pyenv
+    echo "Checking for pyenv..."
+    if [ ! -d "$HOME/.pyenv" ] ; then
+        echo "Looks like pyenv is not installed, proceeding with install"
+        curl https://pyenv.run | bash
+    else
+        echo "pyenv seems to be installed"
+    fi  
+    
+    export PYENV_ROOT="$HOME/.pyenv"
+    command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init -)"
+
+    pyenv install -s $PY3_VERSION
+    pyenv global $PY3_VERSION
 fi
 
-
-# Various Homebrew-installable tools.
-brew install \
-        vim `# default vim has no Python3 support, brew verson does` \
-        fzf \
-	jq \
-	gnu-sed `# default sed differs from Linux equivalent` \
-	htop \
-	rectangle `# replacement for ShiftIt` \
-	cmake `# to compile Vim YouCompleteMe, among other things` \ 
-	postgresql `# requirement for pip install psycopg2-binary` \
-	libjpeg `# requirement for pip install pillow` \
-	hadolint `# linter for Dockerfiles` \
-	dive `# useful tool to inspect docker images` \
-	ncdu `# ncurses du (find big files/dirs fast)` \
-        kubectx `# kubectx and kubens, simplify k8s access`
-brew install --cask \
-	google-cloud-sdk
-
-# Pyenv
-echo "Checking for pyenv..."
-if ! command -v pyenv > /dev/null ; then
-    echo "Looks like pyenv is not installed, proceeding with install through brew."
-    brew install pyenv pyenv-virtualenv
-else
-    echo "pyenv seems to be installed"
-fi
-
-PYTHON_CONFIGURE_OPTS="--enable-framework" pyenv install -s $PY3_VERSION
-pyenv global $PY3_VERSION
-pip install --upgrade pip
+pip install --upgrade pip 
 pip install --upgrade pipx
 
 
@@ -51,7 +53,6 @@ echo -e "\nChecking for oh my zsh..."
 
 if [ ! -d ${HOME}/.oh-my-zsh ]; then
     echo "Could not find oh-my-zsh dir. Installing..."
-    export CHSH=no  # chsh is no longer needed since MacOS Catalina
     export RUNZSH=no  # by default, it runs zsh directly and this script does not continue 
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     echo "Installing oh-my-zsh plugins..."
@@ -70,6 +71,10 @@ fi
 cp .zshrc ~/.zshrc
 cp .p10k.zsh ~/.p10k.zsh
 
+# Workaround for a very specific instance where the oh-my-zsh installation post-install chsh does not work:
+if [[ "${USER}" == "jovyan" ]] ; then
+    sudo chsh -s /bin/zsh jovyan
+fi
 
 # Vim
 echo -e "\nConfiguring vim..."
@@ -86,7 +91,7 @@ cp .ideavimrc ~/.ideavimrc
 if [ ! -d ${HOME}/.vim/bundle ]; then
     echo "Installing Vundle with YouCompleteMe"
     git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-    /opt/homebrew/bin/vim +PluginInstall +qall
+    vim +PluginInstall +qall
     pushd ${HOME}/.vim/bundle/YouCompleteMe
     python install.py
     popd
@@ -94,12 +99,10 @@ else
     echo "Vundle already installed, skipping installation of Vundle and YouCompleteMe"
 fi
 
-# Enable repeating keys (disable the popup to select diacritics etc):
-defaults write -g ApplePressAndHoldEnabled -bool false
 
 echo -e "\nAll done!"
 echo "If this is the first time installing powerline10k, run 'p10k configure' to install Meslo Nerd font."
-echo -e "You will also have to reboot to enable repeating keys.\n\nRunning zsh now..."
+echo -e "\n\nRunning zsh now..."
 
 zsh
 
