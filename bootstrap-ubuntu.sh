@@ -56,8 +56,9 @@ if [ ! -d ${HOME}/.oh-my-zsh ]; then
     export RUNZSH=no  # by default, it runs zsh directly and this script does not continue 
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     echo "Installing oh-my-zsh plugins..."
-    git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+    git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${HOME}/.oh-my-zsh/custom/themes/powerlevel10k
+    git clone --depth=1 https://github.com/peterhurford/git-it-on.zsh ${HOME}/.oh-my-zsh/custom/plugins/git-it-on
 else
     echo "oh my zsh already installed, skipping"
 fi
@@ -70,6 +71,10 @@ fi
 cp .zshrc ~/.zshrc
 cp .p10k.zsh ~/.p10k.zsh
 
+# Workaround for a very specific instance where the oh-my-zsh installation post-install chsh does not work:
+if [[ "${USER}" == "jovyan" ]] ; then
+    sudo chsh -s /bin/zsh jovyan
+fi
 
 # Vim
 echo -e "\nConfiguring vim..."
