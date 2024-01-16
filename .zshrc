@@ -19,6 +19,7 @@ plugins=(
   git
   zsh-autosuggestions
   vi-mode
+  git-it-on
   fzf
 )
 
@@ -78,6 +79,15 @@ export PATH="$HOME/.local/bin:$PATH"
 # Poetry:
 export PATH="$HOME/.poetry/bin:$PATH"
 alias pr="poetry run"
+alias pycheck="poetry run black . && poetry run isort . && poetry run flake8 && poetry run pytest"
+
+# Kube:
+alias k=kubectl
+# List nodes with instance type, sorted by time:
+alias kgn="\
+  kubectl get nodes \
+  --label-columns node.kubernetes.io/role,kubernetes.io/arch,node.kubernetes.io/instance-type \
+  --sort-by=\".status.conditions[?(@.reason == 'KubeletReady' )].lastTransitionTime\""
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
