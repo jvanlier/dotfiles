@@ -9,35 +9,42 @@ sudo apt install --yes \
     jq \
     htop \
     cmake `# to compile Vim YouCompleteMe, among other things` \
-    ncdu `# ncurses du (find big files/dirs fast)` \
-    `# the following are required for pyenv installs` \
-    zlib1g-dev \
-    libffi-dev \
-    libssl-dev \
-    `# the following are technically optional for pyenv installs, but often assumed to be present:` \
-    libbz2-dev \
-    libsqlite3-dev \
-    libncursesw5-dev \
-    libreadline-dev \
-    liblz-dev \
-    lzma-dev
+    ncdu `# ncurses du (find big files/dirs fast)`
 
-# Pyenv
-echo "Checking for pyenv..."
-if [ ! -d "$HOME/.pyenv" ] ; then
-    echo "Looks like pyenv is not installed, proceeding with install"
-    curl https://pyenv.run | bash
-else
-    echo "pyenv seems to be installed"
+# Occasionally, I want to run this while inside a k8s pod. 
+# Then there's typically on need for pyenv.
+if [[ "${POD_NAME:=NONE}" == "NONE" ]] ; then
+    sudo apt install --yes \
+        `# the following are required for pyenv installs` \
+        zlib1g-dev \
+        libffi-dev \
+        libssl-dev \
+        `# the following are technically optional for pyenv installs, but often assumed to be present:` \
+        libbz2-dev \
+        libsqlite3-dev \
+        libncursesw5-dev \
+        libreadline-dev \
+        liblz-dev \
+        lzma-dev
+
+    # Pyenv
+    echo "Checking for pyenv..."
+    if [ ! -d "$HOME/.pyenv" ] ; then
+        echo "Looks like pyenv is not installed, proceeding with install"
+        curl https://pyenv.run | bash
+    else
+        echo "pyenv seems to be installed"
+    fi  
+    
+    export PYENV_ROOT="$HOME/.pyenv"
+    command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init -)"
+
+    pyenv install -s $PY3_VERSION
+    pyenv global $PY3_VERSION
 fi
 
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-
-pyenv install -s $PY3_VERSION
-pyenv global $PY3_VERSION
-pip install --upgrade pip
+pip install --upgrade pip 
 pip install --upgrade pipx
 
 
