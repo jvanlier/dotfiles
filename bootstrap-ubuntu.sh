@@ -72,7 +72,7 @@ cp .zshrc ~/.zshrc
 cp .p10k.zsh ~/.p10k.zsh
 
 # Workaround for a very specific instance where the oh-my-zsh installation post-install chsh does not work:
-if [[ "${USER}" == "jovyan" ]] ; then
+if [[ "$(whoami)" == "jovyan" ]] ; then
     sudo chsh -s /bin/zsh jovyan
 fi
 
