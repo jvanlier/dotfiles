@@ -1,6 +1,8 @@
-#!/usr/bin/env /bin/bash
+#!/bin/bash
 set -eu
-source bootstrap-common.sh
+
+# shellcheck source=bootstrap-common.sh
+source ./bootstrap-common.sh
 
 sudo apt update
 sudo apt install --yes \
@@ -34,16 +36,16 @@ if [[ "${POD_NAME:=NONE}" == "NONE" ]] && [[ ! "${SKIP_PYENV:=0}" == "1"  ]] ; t
         curl https://pyenv.run | bash
     else
         echo "pyenv seems to be installed"
-    fi  
-    
+    fi
+
     export PYENV_ROOT="$HOME/.pyenv"
     command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
     eval "$(pyenv init -)"
 
-    pyenv install -s $PY3_VERSION
-    pyenv global $PY3_VERSION
+    pyenv install -s "${PY3_VERSION}"
+    pyenv global "${PY3_VERSION}"
 
-    pip install --upgrade pip 
+    pip install --upgrade pip
     pip install --upgrade pipx
 else
     # Fallback is mainly for Docker builds, to allow compiling YouCompleteMe later.
@@ -55,22 +57,22 @@ fi
 # Zsh
 echo -e "\nChecking for oh my zsh..."
 
-if [ ! -d ${HOME}/.oh-my-zsh ]; then
+if [ ! -d "${HOME}/.oh-my-zsh" ]; then
     echo "Could not find oh-my-zsh dir. Installing..."
-    export RUNZSH=no  # by default, it runs zsh directly and this script does not continue 
+    export RUNZSH=no  # by default, it runs zsh directly and this script does not continue
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     echo "Installing oh-my-zsh plugins..."
-    git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${HOME}/.oh-my-zsh/custom/themes/powerlevel10k
-    git clone --depth=1 https://github.com/peterhurford/git-it-on.zsh ${HOME}/.oh-my-zsh/custom/plugins/git-it-on
+    git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k"
+    git clone --depth=1 https://github.com/peterhurford/git-it-on.zsh "${HOME}/.oh-my-zsh/custom/plugins/git-it-on"
 else
     echo "oh my zsh already installed, skipping"
 fi
 
 if [ -f ~/.zshrc ]; then
     ZSHRC_BAK="${HOME}/.zshrc.bak.${TS}"
-    echo "Copying old ~/.zshrc to $ZSHRC_BAK"
-    cp ~/.zshrc $ZSHRC_BAK
+    echo "Copying old ~/.zshrc to ${ZSHRC_BAK}"
+    cp ~/.zshrc "${ZSHRC_BAK}"
 fi
 cp dotfiles/.zshrc ~/.zshrc
 cp dotfiles/.p10k.zsh ~/.p10k.zsh
@@ -85,18 +87,18 @@ echo -e "\nConfiguring vim..."
 
 if [ -f ~/.vimrc ]; then
     VIMRC_BAK="${HOME}/.vimrc.bak.${TS}"
-    echo "Copying old ~/.vimrc to $VIMRC_BAK"
-    cp ~/.vimrc $VIMRC_BAK
+    echo "Copying old ~/.vimrc to ${VIMRC_BAK}"
+    cp ~/.vimrc "${VIMRC_BAK}"
 fi
 
 cp dotfiles/.vimrc ~/.vimrc
 cp dotfiles/.ideavimrc ~/.ideavimrc
 
-if [ ! -d ${HOME}/.vim/bundle ]; then
+if [ ! -d "${HOME}/.vim/bundle" ]; then
     echo "Installing Vundle with YouCompleteMe"
     git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
     vim +PluginInstall +qall
-    pushd ${HOME}/.vim/bundle/YouCompleteMe
+    pushd "${HOME}/.vim/bundle/YouCompleteMe"
     # Installation will fail if vim version is < 9.1:
     python3 install.py || true
     popd

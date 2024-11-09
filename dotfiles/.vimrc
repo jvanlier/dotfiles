@@ -67,10 +67,10 @@ au BufNewFile,BufRead *.py
     \ set fileformat=unix |
 
 au BufNewFile,BufRead *.md
-    \ set linebreak 
+    \ set linebreak
 
 au BufNewFile,BufRead *.tex
-    \ set linebreak 
+    \ set linebreak
 
 au BufNewFile,BufRead *.html
     \ set tabstop=4 |

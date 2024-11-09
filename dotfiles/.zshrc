@@ -35,8 +35,8 @@ alias icloud="${HOME}/Library/Mobile\ Documents/com~apple~CloudDocs"
 alias up="cd .."
 alias cd..="cd .."
 
-# For vi-mode, switch to block in command mode. And vertical bar for insert 
-# mode. Sources: 
+# For vi-mode, switch to block in command mode. And vertical bar for insert
+# mode. Sources:
 # https://emily.st/2013/05/03/zsh-vi-cursor/
 # https://github.com/neovim/neovim/issues/2583
 function zle-keymap-select zle-line-init
@@ -94,4 +94,3 @@ alias kgn="\
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-

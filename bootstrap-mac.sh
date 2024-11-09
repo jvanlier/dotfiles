@@ -1,5 +1,7 @@
-#!/usr/bin/env /bin/bash
+#!/bin/bash
 set -eu
+
+# shellcheck source=bootstrap-common.sh
 source bootstrap-common.sh
 
 # Homebrew
@@ -21,7 +23,7 @@ brew install \
 	gnu-sed `# default sed differs from Linux equivalent` \
 	htop \
 	rectangle `# replacement for ShiftIt` \
-	cmake `# to compile Vim YouCompleteMe, among other things` \ 
+	cmake `# to compile Vim YouCompleteMe, among other things` \
 	postgresql `# requirement for pip install psycopg2-binary` \
 	libjpeg `# requirement for pip install pillow` \
 	hadolint `# linter for Dockerfiles` \
@@ -41,8 +43,8 @@ else
     echo "pyenv seems to be installed"
 fi
 
-PYTHON_CONFIGURE_OPTS="--enable-framework" pyenv install -s $PY3_VERSION
-pyenv global $PY3_VERSION
+PYTHON_CONFIGURE_OPTS="--enable-framework" pyenv install -s "${PY3_VERSION}"
+pyenv global "${PY3_VERSION}"
 pip install --upgrade pip
 pip install --upgrade pipx
 
@@ -50,23 +52,23 @@ pip install --upgrade pipx
 # Zsh
 echo -e "\nChecking for oh my zsh..."
 
-if [ ! -d ${HOME}/.oh-my-zsh ]; then
+if [ ! -d "${HOME}/.oh-my-zsh" ]; then
     echo "Could not find oh-my-zsh dir. Installing..."
     export CHSH=no  # chsh is no longer needed since MacOS Catalina
-    export RUNZSH=no  # by default, it runs zsh directly and this script does not continue 
+    export RUNZSH=no  # by default, it runs zsh directly and this script does not continue
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     echo "Installing oh-my-zsh plugins..."
-    git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${HOME}/.oh-my-zsh/custom/themes/powerlevel10k
-    git clone --depth=1 https://github.com/peterhurford/git-it-on.zsh ${HOME}/.oh-my-zsh/custom/plugins/git-it-on
+    git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k"
+    git clone --depth=1 https://github.com/peterhurford/git-it-on.zsh "${HOME}/.oh-my-zsh/custom/plugins/git-it-on"
 else
     echo "oh my zsh already installed, skipping"
 fi
 
 if [ -f ~/.zshrc ]; then
     ZSHRC_BAK="${HOME}/.zshrc.bak.${TS}"
-    echo "Copying old ~/.zshrc to $ZSHRC_BAK"
-    cp ~/.zshrc $ZSHRC_BAK
+    echo "Copying old ~/.zshrc to ${ZSHRC_BAK}"
+    cp ~/.zshrc "${ZSHRC_BAK}"
 fi
 cp dotfiles/.zshrc ~/.zshrc
 cp dotfiles/.p10k.zsh ~/.p10k.zsh
@@ -78,17 +80,17 @@ echo -e "\nConfiguring vim..."
 if [ -f ~/.vimrc ]; then
     VIMRC_BAK="${HOME}/.vimrc.bak.${TS}"
     echo "Copying old ~/.vimrc to $VIMRC_BAK"
-    cp ~/.vimrc $VIMRC_BAK
+    cp ~/.vimrc "${VIMRC_BAK}"
 fi
 
 cp dotfiles/.vimrc ~/.vimrc
 cp dotfiles/.ideavimrc ~/.ideavimrc
 
-if [ ! -d ${HOME}/.vim/bundle ]; then
+if [ ! -d "${HOME}/.vim/bundle" ]; then
     echo "Installing Vundle with YouCompleteMe"
     git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
     /opt/homebrew/bin/vim +PluginInstall +qall
-    pushd ${HOME}/.vim/bundle/YouCompleteMe
+    pushd "${HOME}/.vim/bundle/YouCompleteMe"
     python install.py
     popd
 else
@@ -103,4 +105,3 @@ echo "If this is the first time installing powerline10k, run 'p10k configure' to
 echo -e "You will also have to reboot to enable repeating keys.\n\nRunning zsh now..."
 
 zsh
-
