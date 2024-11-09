@@ -7,14 +7,14 @@ on:
     branches: [ "master" ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-24-lts, debian-12-bookworm]
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build Docker image for Ubuntu 24
-      run: docker build --tag dotfiles-ubuntu24 --build-arg SKIP_PYENV=1 -f docker/ubuntu-24-lts/Dockerfile .
-    - name: Build Docker image for Debian 12
-      run: docker build --tag dotfiles-debian12 --build-arg SKIP_PYENV=1 -f docker/debian-12-bookworm/Dockerfile .
+    - name: Build Docker image
+      run: |
+        docker build --tag dotfiles-${{ matrix.os }} --build-arg SKIP_PYENV=1 -f docker/${{ matrix.os }}/Dockerfile .
