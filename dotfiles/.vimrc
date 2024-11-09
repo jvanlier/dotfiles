@@ -1,6 +1,7 @@
 let g:ycm_server_python_interpreter = 'python3'
 syntax on
 
+set encoding=utf-8
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
@@ -91,7 +92,8 @@ let python_highlight_all=1
 " YCM shortcut: goto declaration quickly with backslash-g
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
-colorscheme zenburn
+" silent prefix to supress error on first startup:
+silent! colorscheme zenburn
 
 set nu
 set ruler

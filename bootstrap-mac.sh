@@ -1,10 +1,6 @@
 #!/usr/bin/env /bin/bash
 set -eu
-
-PY3_VERSION="3.10.6"
-BASE_VENV="base-${PY3_VERSION}"
-TS=$(date +'%Y-%m-%dT%H-%M-%S')
-
+source bootstrap-common.sh
 
 # Homebrew
 echo "Checking for Homebrew..."
@@ -19,9 +15,9 @@ fi
 
 # Various Homebrew-installable tools.
 brew install \
-        vim `# default vim has no Python3 support, brew verson does` \
-        fzf \
-	jq \
+        vim `# default vim has no Python3 support, brew version does` \
+        fzf `# fuzzy search` \
+	jq `# json processor` \
 	gnu-sed `# default sed differs from Linux equivalent` \
 	htop \
 	rectangle `# replacement for ShiftIt` \
@@ -31,7 +27,8 @@ brew install \
 	hadolint `# linter for Dockerfiles` \
 	dive `# useful tool to inspect docker images` \
 	ncdu `# ncurses du (find big files/dirs fast)` \
-        kubectx `# kubectx and kubens, simplify k8s access`
+    kubectx `# kubectx and kubens, simplify k8s access` \
+    k9s `# simplify k8s access even more`
 brew install --cask \
 	google-cloud-sdk
 
@@ -71,8 +68,8 @@ if [ -f ~/.zshrc ]; then
     echo "Copying old ~/.zshrc to $ZSHRC_BAK"
     cp ~/.zshrc $ZSHRC_BAK
 fi
-cp .zshrc ~/.zshrc
-cp .p10k.zsh ~/.p10k.zsh
+cp dotfiles/.zshrc ~/.zshrc
+cp dotfiles/.p10k.zsh ~/.p10k.zsh
 
 
 # Vim
@@ -84,8 +81,8 @@ if [ -f ~/.vimrc ]; then
     cp ~/.vimrc $VIMRC_BAK
 fi
 
-cp .vimrc ~/.vimrc
-cp .ideavimrc ~/.ideavimrc
+cp dotfiles/.vimrc ~/.vimrc
+cp dotfiles/.ideavimrc ~/.ideavimrc
 
 if [ ! -d ${HOME}/.vim/bundle ]; then
     echo "Installing Vundle with YouCompleteMe"

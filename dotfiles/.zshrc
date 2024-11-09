@@ -68,10 +68,13 @@ export LANG=en_US.UTF-8
 export TERM='xterm-256color'
 
 # Pyenv:
-export PYENV_ROOT="${HOME}/.pyenv"
-export PATH="$PYENV_ROOT/bin:${PATH}"
-eval "$(pyenv init --path)"
-eval "$(pyenv virtualenv-init -)"
+PYENV_ROOT="${HOME}/.pyenv"
+if [ -d "${PYENV_ROOT}" ] ; then
+    export PYENV_ROOT
+    export PATH="$PYENV_ROOT/bin:${PATH}"
+    eval "$(pyenv init --path)"
+    eval "$(pyenv virtualenv-init -)"
+fi
 
 # Pipx:
 export PATH="$HOME/.local/bin:$PATH"
