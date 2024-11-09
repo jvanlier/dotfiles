@@ -17,4 +17,4 @@ jobs:
     - name: Build Docker image for Ubuntu 24
       run: docker build --tag dotfiles-ubuntu24 --build-arg SKIP_PYENV=1 -f docker/ubuntu-24-lts/Dockerfile .
     - name: Build Docker image for Debian 12
-      run: docker build --tag dotfiles-debian12 --build-arg SKIP_PYENV=1 -f docker/debian-12-lts/Dockerfile .
+      run: docker build --tag dotfiles-debian12 --build-arg SKIP_PYENV=1 -f docker/debian-12-bookworm/Dockerfile .
