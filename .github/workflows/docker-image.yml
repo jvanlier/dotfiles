@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker CI
 
 on:
   push:
@@ -14,5 +14,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Build Docker image for Ubuntu 24
+      run: build --tag dotfiles-ubuntu24 --build-arg SKIP_PYENV=1 -f docker/ubuntu-24-lts/Dockerfile .
+    - name: Build Docker image for Debian 12
+      run: build --tag dotfiles-debian12 --build-arg SKIP_PYENV=1 -f docker/ubuntu-12-lts/Dockerfile .
