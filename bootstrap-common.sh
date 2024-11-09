@@ -1,6 +1,5 @@
 #!/usr/bin/env /bin/bash
 set -eu
 
-export PY3_VERSION="3.10.13"
-export BASE_VENV="base-${PY3_VERSION}"
+export PY3_VERSION="3.13.0"
 export TS=$(date +'%Y-%m-%dT%H-%M-%S')

@@ -4,22 +4,23 @@ source bootstrap-common.sh
 
 sudo apt update
 sudo apt install --yes \
+    git curl vim `# basic tools` \
     zsh \
-    fzf \
-    jq \
+    fzf `# fuzzy search` \
+    jq `# json processor` \
     htop \
-    cmake `# to compile Vim YouCompleteMe, among other things` \
+    build-essential cmake `# to compile Vim YouCompleteMe` \
     ncdu `# ncurses du (find big files/dirs fast)`
 
-# Occasionally, I want to run this while inside a k8s pod. 
-# Then there's typically on need for pyenv.
-if [[ "${POD_NAME:=NONE}" == "NONE" ]] ; then
+# Install Pyenv
+# POD_NAME check is to automatically skip pyenv when inside a k8s pod (generally not needed there).
+if [[ "${POD_NAME:=NONE}" == "NONE" ]] && [[ ! "${SKIP_PYENV:=0}" == "1"  ]] ; then
     sudo apt install --yes \
         `# the following are required for pyenv installs` \
         zlib1g-dev \
         libffi-dev \
         libssl-dev \
-        `# the following are technically optional for pyenv installs, but often assumed to be present:` \
+        `# the following are technically optional for pyenv installs, but not having them may cause problems:` \
         libbz2-dev \
         libsqlite3-dev \
         libncursesw5-dev \
@@ -27,7 +28,6 @@ if [[ "${POD_NAME:=NONE}" == "NONE" ]] ; then
         liblz-dev \
         lzma-dev
 
-    # Pyenv
     echo "Checking for pyenv..."
     if [ ! -d "$HOME/.pyenv" ] ; then
         echo "Looks like pyenv is not installed, proceeding with install"
@@ -42,10 +42,14 @@ if [[ "${POD_NAME:=NONE}" == "NONE" ]] ; then
 
     pyenv install -s $PY3_VERSION
     pyenv global $PY3_VERSION
-fi
 
-pip install --upgrade pip 
-pip install --upgrade pipx
+    pip install --upgrade pip 
+    pip install --upgrade pipx
+else
+    # Fallback is mainly for Docker builds, to allow compiling YouCompleteMe later.
+    echo "Proceeding with fallback Python 3 install."
+    sudo apt install --yes python3 python3-dev
+fi
 
 
 # Zsh
@@ -68,8 +72,8 @@ if [ -f ~/.zshrc ]; then
     echo "Copying old ~/.zshrc to $ZSHRC_BAK"
     cp ~/.zshrc $ZSHRC_BAK
 fi
-cp .zshrc ~/.zshrc
-cp .p10k.zsh ~/.p10k.zsh
+cp dotfiles/.zshrc ~/.zshrc
+cp dotfiles/.p10k.zsh ~/.p10k.zsh
 
 # Workaround for a very specific instance where the oh-my-zsh installation post-install chsh does not work:
 if [[ "$(whoami)" == "jovyan" ]] ; then
@@ -85,15 +89,16 @@ if [ -f ~/.vimrc ]; then
     cp ~/.vimrc $VIMRC_BAK
 fi
 
-cp .vimrc ~/.vimrc
-cp .ideavimrc ~/.ideavimrc
+cp dotfiles/.vimrc ~/.vimrc
+cp dotfiles/.ideavimrc ~/.ideavimrc
 
 if [ ! -d ${HOME}/.vim/bundle ]; then
     echo "Installing Vundle with YouCompleteMe"
     git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
     vim +PluginInstall +qall
     pushd ${HOME}/.vim/bundle/YouCompleteMe
-    python install.py
+    # Installation will fail if vim version is < 9.1:
+    python3 install.py || true
     popd
 else
     echo "Vundle already installed, skipping installation of Vundle and YouCompleteMe"
@@ -105,4 +110,3 @@ echo "If this is the first time installing powerline10k, run 'p10k configure' to
 echo -e "\n\nRunning zsh now..."
 
 zsh
-
