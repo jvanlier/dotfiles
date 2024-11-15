@@ -28,7 +28,8 @@ if [[ "${POD_NAME:=NONE}" == "NONE" ]] && [[ ! "${SKIP_PYENV:=0}" == "1"  ]] ; t
         libncursesw5-dev \
         libreadline-dev \
         liblz-dev \
-        lzma-dev
+        lzma-dev \
+        liblzma-dev
 
     echo "Checking for pyenv..."
     if [ ! -d "$HOME/.pyenv" ] ; then
