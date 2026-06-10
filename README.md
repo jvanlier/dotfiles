@@ -52,7 +52,7 @@ If that fails (network restrictions), ruff still works without node.
 
 ### First launch checklist
 
-1. Open `nvim` - Lazy syncs remaining plugins automatically.
+1. Open `nvim` - if plugins are missing or errors appear, run `:Lazy sync` and restart.
 2. Run `:Mason` to verify LSP server installation.
 3. Run `:checkhealth` to diagnose issues.
 4. If treesitter parsers are missing: `:TSInstall python`.
