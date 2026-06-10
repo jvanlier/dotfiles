@@ -1,7 +1,7 @@
 dotfiles
 ========
 
-My dotfiles for a nice and consistent terminal and vim experience on MacOS and Linux.
+My dotfiles for a nice and consistent terminal and Neovim experience on macOS and Linux.
 
 ## Usage
 
@@ -18,11 +18,49 @@ On Debian or Ubuntu:
 ```
 
 
+## Neovim
+
+Config is deployed to `~/.config/nvim/` from `dotfiles/config/nvim/`.
+
+Plugin manager: [lazy.nvim](https://github.com/folke/lazy.nvim) - auto-installs on first launch.
+
+**LSP servers** are installed by [Mason](https://github.com/mason-org/mason.nvim) on first interactive launch: basedpyright, ruff, lua_ls, jsonls, yamlls.
+Node.js is required for basedpyright, jsonls, and yamlls. The bootstrap installs it via NodeSource.
+If that fails (network restrictions), ruff still works without node.
+
+**Python debugging** requires `pip install debugpy` in each project's virtual environment.
+
+**Linux only:** `fd-find` installs as `fdfind`; the bootstrap creates a `~/.local/bin/fd` symlink for telescope.
+
+### Key bindings (leader = Space)
+
+| Key | Action |
+|-----|--------|
+| `<leader>ff` | Find files |
+| `<leader>fg` | Live grep |
+| `<leader>fb` | Buffers |
+| `<leader>e`  | Toggle file tree |
+| `<leader>xx` | Diagnostics panel |
+| `<leader>db` | Toggle breakpoint |
+| `<leader>dc` | Start / continue debug |
+| `<leader>du` | Toggle debug UI |
+| `gd` | Goto definition |
+| `K`  | Hover docs |
+| `<leader>cf` | Format buffer |
+| `s` / `S` | Flash jump / treesitter jump |
+| `<C-h/j/k/l>` | Window navigation |
+
+### First launch checklist
+
+1. Open `nvim` - Lazy syncs remaining plugins automatically.
+2. Run `:Mason` to verify LSP server installation.
+3. Run `:checkhealth` to diagnose issues.
+4. If treesitter parsers are missing: `:TSInstall python`.
+
+
 ## Known issues
 
-- Debian 12 has vim 9.0, whereas 9.1 is needed for YouCompleteMe.
-  This is not fatal: the script continues, but you won't get completion in vim.
-- Resize bug in iTerm 2 with powerline10k: while resizing with the mouse, the prompt gets redrawn multiple times.
-  There's a [mitigation](https://github.com/romkatv/powerlevel10k#horrific-mess-when-resizing-terminal-window) that involves disabling all right hand side elements.
-  Better mitigation: just do not use mouse resize.
-  Use Rectangle on Mac.
+- Resize bug in iTerm2 with powerlevel10k: while resizing with the mouse, the prompt gets redrawn multiple times.
+  Better mitigation: use Rectangle on Mac for window management instead of mouse resize.
+- Neovim icons require a Nerd Font. Run `p10k configure` to install Meslo Nerd Font.
+- On arm64 Linux, the bootstrap automatically installs the `nvim-linux-arm64.tar.gz` tarball.

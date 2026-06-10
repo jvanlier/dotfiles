@@ -84,6 +84,10 @@ export PATH="$HOME/.poetry/bin:$PATH"
 alias pr="poetry run"
 alias pycheck="poetry run black . && poetry run isort . && poetry run flake8 && poetry run pytest"
 
+# Neovim:
+export EDITOR=nvim
+alias vim=nvim
+
 # Kube:
 alias k=kubectl
 # List nodes with instance type, sorted by time:

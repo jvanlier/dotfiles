@@ -17,20 +17,23 @@ fi
 
 # Various Homebrew-installable tools.
 brew install \
-        vim `# default vim has no Python3 support, brew version does` \
+        neovim `# replaces vim` \
         fzf `# fuzzy search` \
 	jq `# json processor` \
 	gnu-sed `# default sed differs from Linux equivalent` \
 	htop \
 	rectangle `# replacement for ShiftIt` \
-	cmake `# to compile Vim YouCompleteMe, among other things` \
 	postgresql `# requirement for pip install psycopg2-binary` \
 	libjpeg `# requirement for pip install pillow` \
 	hadolint `# linter for Dockerfiles` \
 	dive `# useful tool to inspect docker images` \
 	ncdu `# ncurses du (find big files/dirs fast)` \
     kubectx `# kubectx and kubens, simplify k8s access` \
-    k9s `# simplify k8s access even more`
+    k9s `# simplify k8s access even more` \
+    ripgrep `# required by telescope live_grep` \
+    fd `# required by telescope find_files` \
+    node `# required by Mason for basedpyright/jsonls/yamlls` \
+    coreutils `# provides timeout, used during nvim plugin presync`
 brew install --cask \
 	google-cloud-sdk
 
@@ -74,27 +77,26 @@ cp dotfiles/.zshrc ~/.zshrc
 cp dotfiles/.p10k.zsh ~/.p10k.zsh
 
 
-# Vim
-echo -e "\nConfiguring vim..."
+# Neovim
+echo -e "\nConfiguring neovim..."
 
-if [ -f ~/.vimrc ]; then
-    VIMRC_BAK="${HOME}/.vimrc.bak.${TS}"
-    echo "Copying old ~/.vimrc to $VIMRC_BAK"
-    cp ~/.vimrc "${VIMRC_BAK}"
-fi
-
-cp dotfiles/.vimrc ~/.vimrc
 cp dotfiles/.ideavimrc ~/.ideavimrc
 
-if [ ! -d "${HOME}/.vim/bundle" ]; then
-    echo "Installing Vundle with YouCompleteMe"
-    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-    /opt/homebrew/bin/vim +PluginInstall +qall
-    pushd "${HOME}/.vim/bundle/YouCompleteMe"
-    python install.py
-    popd
+NVIM_CONFIG_DIR="${HOME}/.config/nvim"
+if [ -d "${NVIM_CONFIG_DIR}" ]; then
+    echo "Backing up existing nvim config to ${NVIM_CONFIG_DIR}.bak.${TS}"
+    cp -r "${NVIM_CONFIG_DIR}" "${NVIM_CONFIG_DIR}.bak.${TS}"
+    rm -rf "${NVIM_CONFIG_DIR}"
+fi
+mkdir -p "${HOME}/.config"
+cp -r dotfiles/config/nvim "${NVIM_CONFIG_DIR}"
+
+# Best-effort headless plugin presync; Mason LSP installs are skipped when headless.
+echo "Pre-syncing neovim plugins (best-effort)..."
+if command -v timeout > /dev/null; then
+    timeout 120 nvim --headless "+Lazy! sync" +qa 2>/dev/null || true
 else
-    echo "Vundle already installed, skipping installation of Vundle and YouCompleteMe"
+    nvim --headless "+Lazy! sync" +qa 2>/dev/null || true
 fi
 
 # Enable repeating keys (disable the popup to select diacritics etc):
