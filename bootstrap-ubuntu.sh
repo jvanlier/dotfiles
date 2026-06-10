@@ -11,10 +11,10 @@ sudo apt install --yes \
     fzf `# fuzzy search` \
     jq `# json processor` \
     htop \
-    make `# needed by telescope-fzf-native build step` \
-    xz-utils `# needed to extract neovim tarball` \
-    ripgrep `# required by telescope live_grep` \
-    fd-find `# required by telescope find_files (binary name: fdfind)` \
+    make `# nvim: needed by telescope-fzf-native build step` \
+    xz-utils `# nvim: needed to extract neovim tarball` \
+    ripgrep `# nvim: required by telescope live_grep` \
+    fd-find `# nvim: required by telescope find_files (binary name: fdfind)` \
     ncdu `# ncurses du (find big files/dirs fast)`
 
 # Neovim: apt version is too old on Ubuntu 24.04 / Debian 12; install from GitHub release.
