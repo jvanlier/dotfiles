@@ -98,3 +98,6 @@ alias kgn="\
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Machine/work-specific config (not in repo):
+[[ ! -f ~/.zshrc_local ]] || source ~/.zshrc_local
