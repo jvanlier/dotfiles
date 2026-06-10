@@ -87,6 +87,7 @@ alias pycheck="poetry run black . && poetry run isort . && poetry run flake8 && 
 # Neovim:
 export EDITOR=nvim
 alias vim=nvim
+alias vi=nvim
 
 # Kube:
 alias k=kubectl
