@@ -30,10 +30,10 @@ brew install \
 	ncdu `# ncurses du (find big files/dirs fast)` \
     kubectx `# kubectx and kubens, simplify k8s access` \
     k9s `# simplify k8s access even more` \
-    ripgrep `# required by telescope live_grep` \
-    fd `# required by telescope find_files` \
-    node `# required by Mason for basedpyright/jsonls/yamlls` \
-    coreutils `# provides timeout, used during nvim plugin presync`
+    ripgrep `# nvim: required by telescope live_grep` \
+    fd `# nvim: required by telescope find_files` \
+    node `# nvim: required by Mason for basedpyright/jsonls/yamlls LSP servers` \
+    coreutils `# nvim: provides timeout, used during plugin presync`
 brew install --cask \
 	google-cloud-sdk
 
