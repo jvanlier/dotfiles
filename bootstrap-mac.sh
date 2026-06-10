@@ -35,7 +35,7 @@ brew install \
     node `# nvim: required by Mason for basedpyright/jsonls/yamlls LSP servers` \
     coreutils `# nvim: provides timeout, used during plugin presync`
 brew install --cask \
-	google-cloud-sdk
+    font-jetbrains-mono-nerd-font `# nvim: full Nerd Font glyph range for nvim-web-devicons; MesloLGS NF (p10k font) only covers p10k glyphs and relies on macOS font fallback for the rest`
 
 # Pyenv
 echo "Checking for pyenv..."
