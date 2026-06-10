@@ -60,7 +60,9 @@ If that fails (network restrictions), ruff still works without node.
 
 ## Known issues
 
-- Resize bug in iTerm2 with powerlevel10k: while resizing with the mouse, the prompt gets redrawn multiple times.
-  Better mitigation: use Rectangle on Mac for window management instead of mouse resize.
+- Resize bug in iTerm 2 with powerline10k: while resizing with the mouse, the prompt gets redrawn multiple times.
+  There's a [mitigation](https://github.com/romkatv/powerlevel10k#horrific-mess-when-resizing-terminal-window) that involves disabling all right hand side elements.
+  Better mitigation: just do not use mouse resize.
+  Use Rectangle on Mac.
 - Neovim icons require a Nerd Font. Run `p10k configure` to install Meslo Nerd Font.
 - On arm64 Linux, the bootstrap automatically installs the `nvim-linux-arm64.tar.gz` tarball.
