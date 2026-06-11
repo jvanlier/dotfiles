@@ -64,5 +64,5 @@ If that fails (network restrictions), ruff still works without node.
   There's a [mitigation](https://github.com/romkatv/powerlevel10k#horrific-mess-when-resizing-terminal-window) that involves disabling all right hand side elements.
   Better mitigation: just do not use mouse resize.
   Use Rectangle on Mac.
-- Neovim icons require a Nerd Font. Run `p10k configure` to install Meslo Nerd Font.
+- Neovim icons require a full Nerd Font. Set iTerm2 terminal font to **JetBrainsMono Nerd Font** (installed by bootstrap): Profiles → Text → Font. The Meslo NF font installed by `p10k configure` only covers p10k glyphs and is not sufficient for nvim icons.
 - On arm64 Linux, the bootstrap automatically installs the `nvim-linux-arm64.tar.gz` tarball.
