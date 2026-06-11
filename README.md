@@ -55,7 +55,8 @@ If that fails (network restrictions), ruff still works without node.
 1. Open `nvim` - if plugins are missing or errors appear, run `:Lazy sync` and restart.
 2. Run `:Mason` to verify LSP server installation.
 3. Run `:checkhealth` to diagnose issues.
-4. If treesitter parsers are missing: `:TSInstall python`.
+4. Treesitter parsers build in the background on first launch (needs the `tree-sitter`
+   CLI, installed by bootstrap). If any are missing, run `:TSUpdate` or `:TSInstall python`.
 
 
 ## Known issues

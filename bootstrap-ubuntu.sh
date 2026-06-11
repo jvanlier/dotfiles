@@ -12,6 +12,7 @@ sudo apt install --yes \
     jq `# json processor` \
     htop \
     make `# nvim: needed by telescope-fzf-native build step` \
+    build-essential `# nvim: C compiler needed by nvim-treesitter to build parsers` \
     xz-utils `# nvim: needed to extract neovim tarball` \
     ripgrep `# nvim: required by telescope live_grep` \
     fd-find `# nvim: required by telescope find_files (binary name: fdfind)` \
@@ -41,6 +42,32 @@ if ! command -v nvim > /dev/null; then
     install_neovim
 else
     echo "neovim already installed: $(nvim --version | head -1)"
+fi
+
+# tree-sitter CLI: required by nvim-treesitter (main branch) to build parsers.
+# apt's version is too old; install the prebuilt binary from GitHub release.
+install_tree_sitter_cli() {
+    TS_VERSION="0.26.9"
+    case "$(uname -m)" in
+        x86_64)  TS_ASSET="tree-sitter-linux-x64.gz"   ;;
+        aarch64) TS_ASSET="tree-sitter-linux-arm64.gz" ;;
+        *)
+            echo "Unsupported architecture for tree-sitter CLI: $(uname -m)" >&2
+            return 1
+            ;;
+    esac
+    TS_URL="https://github.com/tree-sitter/tree-sitter/releases/download/v${TS_VERSION}/${TS_ASSET}"
+    mkdir -p "${HOME}/.local/bin"
+    echo "Downloading tree-sitter CLI ${TS_VERSION} for $(uname -m)..."
+    curl -fsSL "${TS_URL}" | gunzip > "${HOME}/.local/bin/tree-sitter"
+    chmod +x "${HOME}/.local/bin/tree-sitter"
+    echo "tree-sitter CLI installed: $("${HOME}/.local/bin/tree-sitter" --version)"
+}
+
+if ! command -v tree-sitter > /dev/null; then
+    install_tree_sitter_cli
+else
+    echo "tree-sitter CLI already installed: $(tree-sitter --version)"
 fi
 
 # fd-find installs as 'fdfind' on Debian/Ubuntu; create 'fd' symlink for telescope.
@@ -143,8 +170,9 @@ mkdir -p "${HOME}/.config"
 cp -r dotfiles/config/nvim "${NVIM_CONFIG_DIR}"
 
 # Best-effort headless plugin presync; Mason LSP installs are skipped when headless.
+# Put ~/.local/bin on PATH so nvim-treesitter finds the tree-sitter CLI during presync.
 echo "Pre-syncing neovim plugins (best-effort)..."
-timeout 120 nvim --headless "+Lazy! sync" +qa 2>/dev/null || true
+PATH="${HOME}/.local/bin:${PATH}" timeout 120 nvim --headless "+Lazy! sync" +qa 2>/dev/null || true
 
 
 echo -e "\nAll done!"
