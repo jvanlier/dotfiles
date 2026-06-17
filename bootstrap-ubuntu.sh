@@ -71,8 +71,22 @@ fi
 
 # tree-sitter CLI: required by nvim-treesitter (main branch) to build parsers.
 # apt's version is too old; install the prebuilt binary from GitHub release.
+#
+# The prebuilt binaries are dynamically linked against glibc. From v0.25.0 they
+# are built on a newer toolchain and require GLIBC_2.39, which Debian 12
+# bookworm (glibc 2.36, e.g. Raspberry Pi OS) does not have:
+#   tree-sitter: /lib/.../libc.so.6: version `GLIBC_2.39' not found
+# v0.24.7 is the last release that links against an older glibc; it still runs
+# on newer systems (glibc is backward compatible) and builds every parser we
+# need. Pick it when the system glibc is too old for the latest CLI.
 install_tree_sitter_cli() {
-    TS_VERSION="0.26.9"
+    local glibc
+    glibc="$(getconf GNU_LIBC_VERSION 2>/dev/null | awk '{print $2}')"
+    if [ -n "${glibc}" ] && [ "$(printf '%s\n2.39\n' "${glibc}" | sort -V | head -n1)" != "2.39" ]; then
+        TS_VERSION="0.24.7"  # glibc < 2.39
+    else
+        TS_VERSION="0.26.9"  # glibc >= 2.39 (or undetectable)
+    fi
     case "$(uname -m)" in
         x86_64)  TS_ASSET="tree-sitter-linux-x64.gz"   ;;
         aarch64) TS_ASSET="tree-sitter-linux-arm64.gz" ;;
