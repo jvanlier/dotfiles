@@ -6,13 +6,124 @@ source ./bootstrap-common.sh
 
 sudo apt update
 sudo apt install --yes \
-    git curl vim `# basic tools` \
+    git curl `# basic tools` \
     zsh \
     fzf `# fuzzy search` \
     jq `# json processor` \
     htop \
-    build-essential cmake `# to compile Vim YouCompleteMe` \
+    make `# nvim: needed by telescope-fzf-native build step` \
+    build-essential `# nvim: C compiler needed by nvim-treesitter to build parsers` \
+    xz-utils `# nvim: needed to extract neovim tarball` \
+    ripgrep `# nvim: required by telescope live_grep` \
+    fd-find `# nvim: required by telescope find_files (binary name: fdfind)` \
     ncdu `# ncurses du (find big files/dirs fast)`
+
+# Neovim: apt version is too old on Ubuntu 24.04 / Debian 12; install from GitHub release.
+NVIM_VERSION="0.12.2"
+
+# Prebuilt path: fast, used everywhere with a normal 4KB memory page size
+# (x86_64, most aarch64, CI runners, Docker builds).
+install_neovim_prebuilt() {
+    case "$(uname -m)" in
+        x86_64)  NVIM_TARBALL="nvim-linux-x86_64.tar.gz" ;;
+        aarch64) NVIM_TARBALL="nvim-linux-arm64.tar.gz"  ;;
+        *)
+            echo "Unsupported architecture: $(uname -m)" >&2
+            return 1
+            ;;
+    esac
+    NVIM_URL="https://github.com/neovim/neovim/releases/download/v${NVIM_VERSION}/${NVIM_TARBALL}"
+    NVIM_TMP="$(mktemp -d)"
+    echo "Downloading neovim ${NVIM_VERSION} for $(uname -m)..."
+    curl -fsSL "${NVIM_URL}" -o "${NVIM_TMP}/${NVIM_TARBALL}"
+    sudo tar -C /usr/local --strip-components=1 -xzf "${NVIM_TMP}/${NVIM_TARBALL}"
+    rm -rf "${NVIM_TMP}"
+}
+
+# Source path: the prebuilt release bundles a LuaJIT built for 4KB memory pages
+# and segfaults on every invocation (incl. `nvim --version`) under a 16KB-page
+# kernel, e.g. the Raspberry Pi 5 default arm64 kernel. Building from source
+# picks up the system page size. Slow, only taken when 16KB pages are detected.
+install_neovim_from_source() {
+    echo "Building neovim ${NVIM_VERSION} from source (16KB memory pages detected)..."
+    sudo apt install --yes ninja-build gettext cmake unzip
+    NVIM_SRC="$(mktemp -d)"
+    git clone --depth 1 --branch "v${NVIM_VERSION}" https://github.com/neovim/neovim "${NVIM_SRC}"
+    make -C "${NVIM_SRC}" CMAKE_BUILD_TYPE=RelWithDebInfo
+    sudo make -C "${NVIM_SRC}" install
+    rm -rf "${NVIM_SRC}"
+}
+
+install_neovim() {
+    if [ "$(getconf PAGESIZE)" = "16384" ]; then
+        install_neovim_from_source
+    else
+        install_neovim_prebuilt
+    fi
+    echo "Neovim installed: $(nvim --version | head -1)"
+}
+
+if ! command -v nvim > /dev/null; then
+    install_neovim
+else
+    echo "neovim already installed: $(nvim --version | head -1)"
+fi
+
+# tree-sitter CLI: required by nvim-treesitter (main branch) to build parsers.
+# apt's version is too old; install the prebuilt binary from GitHub release.
+#
+# The prebuilt binaries are dynamically linked against glibc. From v0.25.0 they
+# are built on a newer toolchain and require GLIBC_2.39, which Debian 12
+# bookworm (glibc 2.36, e.g. Raspberry Pi OS) does not have:
+#   tree-sitter: /lib/.../libc.so.6: version `GLIBC_2.39' not found
+# v0.24.7 is the last release that links against an older glibc; it still runs
+# on newer systems (glibc is backward compatible) and builds every parser we
+# need. Pick it when the system glibc is too old for the latest CLI.
+install_tree_sitter_cli() {
+    local glibc
+    glibc="$(getconf GNU_LIBC_VERSION 2>/dev/null | awk '{print $2}')"
+    if [ -n "${glibc}" ] && [ "$(printf '%s\n2.39\n' "${glibc}" | sort -V | head -n1)" != "2.39" ]; then
+        TS_VERSION="0.24.7"  # glibc < 2.39
+    else
+        TS_VERSION="0.26.9"  # glibc >= 2.39 (or undetectable)
+    fi
+    case "$(uname -m)" in
+        x86_64)  TS_ASSET="tree-sitter-linux-x64.gz"   ;;
+        aarch64) TS_ASSET="tree-sitter-linux-arm64.gz" ;;
+        *)
+            echo "Unsupported architecture for tree-sitter CLI: $(uname -m)" >&2
+            return 1
+            ;;
+    esac
+    TS_URL="https://github.com/tree-sitter/tree-sitter/releases/download/v${TS_VERSION}/${TS_ASSET}"
+    mkdir -p "${HOME}/.local/bin"
+    echo "Downloading tree-sitter CLI ${TS_VERSION} for $(uname -m)..."
+    curl -fsSL "${TS_URL}" | gunzip > "${HOME}/.local/bin/tree-sitter"
+    chmod +x "${HOME}/.local/bin/tree-sitter"
+    echo "tree-sitter CLI installed: $("${HOME}/.local/bin/tree-sitter" --version)"
+}
+
+if ! command -v tree-sitter > /dev/null; then
+    install_tree_sitter_cli
+else
+    echo "tree-sitter CLI already installed: $(tree-sitter --version)"
+fi
+
+# fd-find installs as 'fdfind' on Debian/Ubuntu; create 'fd' symlink for telescope.
+if command -v fdfind > /dev/null && ! command -v fd > /dev/null; then
+    mkdir -p "${HOME}/.local/bin"
+    ln -sf "$(command -v fdfind)" "${HOME}/.local/bin/fd"
+fi
+
+# Node: required by Mason for basedpyright, jsonls, yamlls LSP servers.
+# Non-fatal: ruff (Python linting) works without node; LSP servers install on first interactive launch.
+if ! command -v node > /dev/null; then
+    echo "Installing nodejs via NodeSource..."
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - || true
+    sudo apt install --yes nodejs || true
+else
+    echo "node already installed: $(node --version)"
+fi
 
 # Install Pyenv
 # POD_NAME check is to automatically skip pyenv when inside a k8s pod (generally not needed there).
@@ -49,7 +160,7 @@ if [[ "${POD_NAME:=NONE}" == "NONE" ]] && [[ ! "${SKIP_PYENV:=0}" == "1"  ]] ; t
     pip install --upgrade pip
     pip install --upgrade pipx
 else
-    # Fallback is mainly for Docker builds, to allow compiling YouCompleteMe later.
+    # Fallback is mainly for Docker builds.
     echo "Proceeding with fallback Python 3 install."
     sudo apt install --yes python3 python3-dev
 fi
@@ -83,29 +194,24 @@ if [[ "$(whoami)" == "jovyan" ]] ; then
     sudo chsh -s /bin/zsh jovyan
 fi
 
-# Vim
-echo -e "\nConfiguring vim..."
+# Neovim
+echo -e "\nConfiguring neovim..."
 
-if [ -f ~/.vimrc ]; then
-    VIMRC_BAK="${HOME}/.vimrc.bak.${TS}"
-    echo "Copying old ~/.vimrc to ${VIMRC_BAK}"
-    cp ~/.vimrc "${VIMRC_BAK}"
-fi
-
-cp dotfiles/.vimrc ~/.vimrc
 cp dotfiles/.ideavimrc ~/.ideavimrc
 
-if [ ! -d "${HOME}/.vim/bundle" ]; then
-    echo "Installing Vundle with YouCompleteMe"
-    git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-    vim +PluginInstall +qall
-    pushd "${HOME}/.vim/bundle/YouCompleteMe"
-    # Installation will fail if vim version is < 9.1:
-    python3 install.py || true
-    popd
-else
-    echo "Vundle already installed, skipping installation of Vundle and YouCompleteMe"
+NVIM_CONFIG_DIR="${HOME}/.config/nvim"
+if [ -d "${NVIM_CONFIG_DIR}" ]; then
+    echo "Backing up existing nvim config to ${NVIM_CONFIG_DIR}.bak.${TS}"
+    cp -r "${NVIM_CONFIG_DIR}" "${NVIM_CONFIG_DIR}.bak.${TS}"
+    rm -rf "${NVIM_CONFIG_DIR}"
 fi
+mkdir -p "${HOME}/.config"
+cp -r dotfiles/config/nvim "${NVIM_CONFIG_DIR}"
+
+# Best-effort headless plugin presync; Mason LSP installs are skipped when headless.
+# Put ~/.local/bin on PATH so nvim-treesitter finds the tree-sitter CLI during presync.
+echo "Pre-syncing neovim plugins (best-effort)..."
+PATH="${HOME}/.local/bin:${PATH}" timeout 120 nvim --headless "+Lazy! sync" +qa 2>/dev/null || true
 
 
 echo -e "\nAll done!"

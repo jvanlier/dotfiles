@@ -84,6 +84,11 @@ export PATH="$HOME/.poetry/bin:$PATH"
 alias pr="poetry run"
 alias pycheck="poetry run black . && poetry run isort . && poetry run flake8 && poetry run pytest"
 
+# Neovim:
+export EDITOR=nvim
+alias vim=nvim
+alias vi=nvim
+
 # Kube:
 alias k=kubectl
 # List nodes with instance type, sorted by time:
@@ -94,3 +99,6 @@ alias kgn="\
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Machine/work-specific config (not in repo):
+[[ ! -f ~/.zshrc_local ]] || source ~/.zshrc_local
