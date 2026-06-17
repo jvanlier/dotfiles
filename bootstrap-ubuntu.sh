@@ -19,8 +19,11 @@ sudo apt install --yes \
     ncdu `# ncurses du (find big files/dirs fast)`
 
 # Neovim: apt version is too old on Ubuntu 24.04 / Debian 12; install from GitHub release.
-install_neovim() {
-    NVIM_VERSION="0.12.2"
+NVIM_VERSION="0.12.2"
+
+# Prebuilt path: fast, used everywhere with a normal 4KB memory page size
+# (x86_64, most aarch64, CI runners, Docker builds).
+install_neovim_prebuilt() {
     case "$(uname -m)" in
         x86_64)  NVIM_TARBALL="nvim-linux-x86_64.tar.gz" ;;
         aarch64) NVIM_TARBALL="nvim-linux-arm64.tar.gz"  ;;
@@ -35,6 +38,28 @@ install_neovim() {
     curl -fsSL "${NVIM_URL}" -o "${NVIM_TMP}/${NVIM_TARBALL}"
     sudo tar -C /usr/local --strip-components=1 -xzf "${NVIM_TMP}/${NVIM_TARBALL}"
     rm -rf "${NVIM_TMP}"
+}
+
+# Source path: the prebuilt release bundles a LuaJIT built for 4KB memory pages
+# and segfaults on every invocation (incl. `nvim --version`) under a 16KB-page
+# kernel, e.g. the Raspberry Pi 5 default arm64 kernel. Building from source
+# picks up the system page size. Slow, only taken when 16KB pages are detected.
+install_neovim_from_source() {
+    echo "Building neovim ${NVIM_VERSION} from source (16KB memory pages detected)..."
+    sudo apt install --yes ninja-build gettext cmake unzip
+    NVIM_SRC="$(mktemp -d)"
+    git clone --depth 1 --branch "v${NVIM_VERSION}" https://github.com/neovim/neovim "${NVIM_SRC}"
+    make -C "${NVIM_SRC}" CMAKE_BUILD_TYPE=RelWithDebInfo
+    sudo make -C "${NVIM_SRC}" install
+    rm -rf "${NVIM_SRC}"
+}
+
+install_neovim() {
+    if [ "$(getconf PAGESIZE)" = "16384" ]; then
+        install_neovim_from_source
+    else
+        install_neovim_prebuilt
+    fi
     echo "Neovim installed: $(nvim --version | head -1)"
 }
 
