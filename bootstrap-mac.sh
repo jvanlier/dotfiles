@@ -104,7 +104,7 @@ fi
 defaults write -g ApplePressAndHoldEnabled -bool false
 
 echo -e "\nAll done!"
-echo "If this is the first time installing powerline10k, run 'p10k configure' to install Meslo Nerd font."
+echo "If this is the first time setting up iTerm2, set the font to 'JetBrainsMono Nerd Font' in iTerm2 → Settings → Profiles → Text → Font."
 echo -e "You will also have to reboot to enable repeating keys.\n\nRunning zsh now..."
 
 zsh
