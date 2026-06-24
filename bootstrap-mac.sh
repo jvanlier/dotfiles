@@ -103,6 +103,31 @@ fi
 # Enable repeating keys (disable the popup to select diacritics etc):
 defaults write -g ApplePressAndHoldEnabled -bool false
 
+# Rectangle: deploy custom window-snapping shortcuts (tuned for Kinesis Advantage 2 layout).
+# Quit first (Rectangle rewrites its prefs on exit), wipe the domain so ONLY these
+# shortcuts are bound (no stock defaults linger), write our set, then relaunch.
+echo -e "\nConfiguring Rectangle shortcuts..."
+osascript -e 'quit app "Rectangle"' 2>/dev/null || true
+defaults delete com.knollsoft.Rectangle 2>/dev/null || true
+
+defaults write com.knollsoft.Rectangle leftHalf        '{ keyCode = 123; modifierFlags = 1310720; }'
+defaults write com.knollsoft.Rectangle rightHalf       '{ keyCode = 124; modifierFlags = 1310720; }'
+defaults write com.knollsoft.Rectangle topHalf         '{ keyCode = 126; modifierFlags = 1572864; }'
+defaults write com.knollsoft.Rectangle bottomHalf      '{ keyCode = 125; modifierFlags = 1572864; }'
+defaults write com.knollsoft.Rectangle topLeft         '{ keyCode = 18;  modifierFlags = 1310720; }'
+defaults write com.knollsoft.Rectangle topRight        '{ keyCode = 19;  modifierFlags = 1310720; }'
+defaults write com.knollsoft.Rectangle bottomLeft      '{ keyCode = 20;  modifierFlags = 1310720; }'
+defaults write com.knollsoft.Rectangle bottomRight     '{ keyCode = 21;  modifierFlags = 1310720; }'
+defaults write com.knollsoft.Rectangle maximize        '{ keyCode = 42;  modifierFlags = 1572864; }'
+defaults write com.knollsoft.Rectangle nextDisplay     '{ keyCode = 45;  modifierFlags = 1572864; }'
+defaults write com.knollsoft.Rectangle previousDisplay '{ keyCode = 35;  modifierFlags = 1572864; }'
+
+# Mark config as established so Rectangle does not re-add its built-in default shortcuts.
+defaults write com.knollsoft.Rectangle alternateDefaultShortcuts -int 1
+defaults write com.knollsoft.Rectangle subsequentExecutionMode  -int 1
+
+open -a Rectangle
+
 echo -e "\nAll done!"
 echo "If this is the first time setting up iTerm2, set the font to 'JetBrainsMono Nerd Font' in iTerm2 → Settings → Profiles → Text → Font."
 echo -e "You will also have to reboot to enable repeating keys.\n\nRunning zsh now..."

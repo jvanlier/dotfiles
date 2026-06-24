@@ -59,6 +59,16 @@ If that fails (network restrictions), ruff still works without node.
    CLI, installed by bootstrap). If any are missing, run `:TSUpdate` or `:TSInstall python`.
 
 
+## Rectangle (macOS window manager)
+
+`bootstrap-mac.sh` installs Rectangle and deploys a fixed set of window-snapping shortcuts
+(halves, corners, maximise, next/previous display), optimized for the Kinesis Advantage 2
+keyboard layout. The bootstrap wipes Rectangle's prefs domain first, so only these shortcuts
+are bound — all other Rectangle actions stay unbound.
+
+To change them: edit a binding in Rectangle's Settings, then read the new value with
+`defaults read com.knollsoft.Rectangle <action>` and update the matching line in `bootstrap-mac.sh`.
+
 ## Known issues
 
 - Resize bug in iTerm 2 with powerline10k: while resizing with the mouse, the prompt gets redrawn multiple times.
