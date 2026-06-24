@@ -130,6 +130,7 @@ open -a Rectangle
 
 echo -e "\nAll done!"
 echo "If this is the first time setting up iTerm2, set the font to 'JetBrainsMono Nerd Font' in iTerm2 → Settings → Profiles → Text → Font."
+echo "To remap Caps Lock to Escape: System Settings → Keyboard → Keyboard Shortcuts → Modifier Keys → set Caps Lock key to Escape."
 echo -e "You will also have to reboot to enable repeating keys.\n\nRunning zsh now..."
 
 zsh

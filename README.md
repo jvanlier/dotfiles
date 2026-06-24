@@ -69,6 +69,13 @@ are bound — all other Rectangle actions stay unbound.
 To change them: edit a binding in Rectangle's Settings, then read the new value with
 `defaults read com.knollsoft.Rectangle <action>` and update the matching line in `bootstrap-mac.sh`.
 
+## Caps Lock → Escape (macOS)
+
+Set manually via **System Settings → Keyboard → Keyboard Shortcuts → Modifier Keys**:
+set the Caps Lock key to Escape. This persists across reboots. Not scripted because the
+underlying pref key is keyboard-specific (embeds the keyboard's vendor/product ID).
+`bootstrap-mac.sh` prints a reminder of this step at the end.
+
 ## Known issues
 
 - Resize bug in iTerm 2 with powerline10k: while resizing with the mouse, the prompt gets redrawn multiple times.
