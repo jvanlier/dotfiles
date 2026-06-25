@@ -47,7 +47,7 @@ else
     echo "pyenv seems to be installed"
 fi
 
-PYTHON_CONFIGURE_OPTS="--enable-framework" pyenv install -s "${PY3_VERSION}"
+pyenv install -s "${PY3_VERSION}"
 pyenv global "${PY3_VERSION}"
 pip install --upgrade pip
 pip install --upgrade pipx
