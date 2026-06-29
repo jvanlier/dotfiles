@@ -105,7 +105,7 @@ defaults write -g ApplePressAndHoldEnabled -bool false
 
 # Speed up key repeat and shorten the initial delay before repeat starts:
 defaults write -g KeyRepeat -int 2
-defaults write -g InitialKeyRepeat -int 15
+defaults write -g InitialKeyRepeat -int 20
 
 # Rectangle: deploy custom window-snapping shortcuts (tuned for Kinesis Advantage 2 layout).
 # Quit first (Rectangle rewrites its prefs on exit), wipe the domain so ONLY these
