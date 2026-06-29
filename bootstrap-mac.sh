@@ -34,7 +34,8 @@ brew install \
     fd `# nvim: required by telescope find_files` \
     node `# nvim: required by Mason for basedpyright/jsonls/yamlls LSP servers` \
     tree-sitter-cli `# nvim: required by nvim-treesitter (main branch) to build parsers` \
-    coreutils `# nvim: provides timeout, used during plugin presync`
+    coreutils `# nvim: provides timeout, used during plugin presync` \
+    bat `# cat with syntax highlighting and git integration`
 brew install --cask \
     font-jetbrains-mono-nerd-font `# nvim: full Nerd Font glyph range for nvim-web-devicons; MesloLGS NF (p10k font) only covers p10k glyphs and relies on macOS font fallback for the rest`
 

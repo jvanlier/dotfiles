@@ -16,7 +16,8 @@ sudo apt install --yes \
     xz-utils `# nvim: needed to extract neovim tarball` \
     ripgrep `# nvim: required by telescope live_grep` \
     fd-find `# nvim: required by telescope find_files (binary name: fdfind)` \
-    ncdu `# ncurses du (find big files/dirs fast)`
+    ncdu `# ncurses du (find big files/dirs fast)` \
+    bat `# cat with syntax highlighting (binary name: batcat on Debian/Ubuntu)`
 
 # Neovim: apt version is too old on Ubuntu 24.04 / Debian 12; install from GitHub release.
 NVIM_VERSION="0.12.2"
@@ -113,6 +114,12 @@ fi
 if command -v fdfind > /dev/null && ! command -v fd > /dev/null; then
     mkdir -p "${HOME}/.local/bin"
     ln -sf "$(command -v fdfind)" "${HOME}/.local/bin/fd"
+fi
+
+# bat installs as 'batcat' on Debian/Ubuntu; create 'bat' symlink for consistency with mac.
+if command -v batcat > /dev/null && ! command -v bat > /dev/null; then
+    mkdir -p "${HOME}/.local/bin"
+    ln -sf "$(command -v batcat)" "${HOME}/.local/bin/bat"
 fi
 
 # Node: required by Mason for basedpyright, jsonls, yamlls LSP servers.
