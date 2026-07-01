@@ -18,6 +18,8 @@ return {
     },
     event = { "BufReadPre", "BufNewFile" },
     config = function()
+      vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
+
       require("mason-lspconfig").setup({
         ensure_installed = is_headless and {} or {
           "basedpyright",
