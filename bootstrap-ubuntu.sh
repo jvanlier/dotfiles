@@ -166,6 +166,7 @@ if [[ "${POD_NAME:=NONE}" == "NONE" ]] && [[ ! "${SKIP_PYENV:=0}" == "1"  ]] ; t
 
     pip install --upgrade pip
     pip install --upgrade pipx
+    pipx install pre-commit
 else
     # Fallback is mainly for Docker builds.
     echo "Proceeding with fallback Python 3 install."

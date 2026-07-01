@@ -52,6 +52,7 @@ pyenv install -s "${PY3_VERSION}"
 pyenv global "${PY3_VERSION}"
 pip install --upgrade pip
 pip install --upgrade pipx
+pipx install pre-commit
 
 
 # Zsh
