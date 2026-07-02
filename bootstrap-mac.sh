@@ -35,7 +35,9 @@ brew install \
     node `# nvim: required by Mason for basedpyright/jsonls/yamlls LSP servers` \
     tree-sitter-cli `# nvim: required by nvim-treesitter (main branch) to build parsers` \
     coreutils `# nvim: provides timeout, used during plugin presync` \
-    bat `# cat with syntax highlighting and git integration`
+    bat `# cat with syntax highlighting and git integration` \
+    git-delta `# pretty git diffs` \
+    shellcheck `# shell script linter`
 brew install --cask \
     font-jetbrains-mono-nerd-font `# nvim: full Nerd Font glyph range for nvim-web-devicons; MesloLGS NF (p10k font) only covers p10k glyphs and relies on macOS font fallback for the rest`
 
@@ -108,6 +110,13 @@ defaults write -g ApplePressAndHoldEnabled -bool false
 # Speed up key repeat and shorten the initial delay before repeat starts:
 defaults write -g KeyRepeat -int 2
 defaults write -g InitialKeyRepeat -int 20
+
+# Configure delta as default git pager
+git config --global core.pager delta
+git config --global interactive.diffFilter "delta --color-only"
+git config --global delta.navigate true
+git config --global delta.dark true
+git config --global merge.conflictStyle zdiff3
 
 # Rectangle: deploy custom window-snapping shortcuts (tuned for Kinesis Advantage 2 layout).
 # Quit first (Rectangle rewrites its prefs on exit), wipe the domain so ONLY these

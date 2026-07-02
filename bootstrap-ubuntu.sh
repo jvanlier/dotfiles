@@ -17,7 +17,8 @@ sudo apt install --yes \
     ripgrep `# nvim: required by telescope live_grep` \
     fd-find `# nvim: required by telescope find_files (binary name: fdfind)` \
     ncdu `# ncurses du (find big files/dirs fast)` \
-    bat `# cat with syntax highlighting (binary name: batcat on Debian/Ubuntu)`
+    bat `# cat with syntax highlighting (binary name: batcat on Debian/Ubuntu)` \
+    shellcheck `# shell script linter`
 
 # Neovim: apt version is too old on Ubuntu 24.04 / Debian 12; install from GitHub release.
 NVIM_VERSION="0.12.2"
@@ -122,6 +123,32 @@ if command -v batcat > /dev/null && ! command -v bat > /dev/null; then
     ln -sf "$(command -v batcat)" "${HOME}/.local/bin/bat"
 fi
 
+# delta: git-delta is not packaged in apt; install .deb from GitHub release.
+DELTA_VERSION="0.19.2"
+
+install_delta() {
+    case "$(uname -m)" in
+        x86_64)  DELTA_DEB="git-delta_${DELTA_VERSION}_amd64.deb" ;;
+        aarch64) DELTA_DEB="git-delta_${DELTA_VERSION}_arm64.deb" ;;
+        *)
+            echo "Unsupported architecture for delta: $(uname -m)" >&2
+            return 1
+            ;;
+    esac
+    DELTA_URL="https://github.com/dandavison/delta/releases/download/${DELTA_VERSION}/${DELTA_DEB}"
+    DELTA_TMP="$(mktemp -d)"
+    echo "Downloading delta ${DELTA_VERSION} for $(uname -m)..."
+    curl -fsSL "${DELTA_URL}" -o "${DELTA_TMP}/${DELTA_DEB}"
+    sudo dpkg -i "${DELTA_TMP}/${DELTA_DEB}"
+    rm -rf "${DELTA_TMP}"
+}
+
+if ! command -v delta > /dev/null; then
+    install_delta
+else
+    echo "delta already installed: $(delta --version)"
+fi
+
 # Node: required by Mason for basedpyright, jsonls, yamlls LSP servers.
 # Non-fatal: ruff (Python linting) works without node; LSP servers install on first interactive launch.
 if ! command -v node > /dev/null; then
@@ -221,6 +248,13 @@ cp -r dotfiles/config/nvim "${NVIM_CONFIG_DIR}"
 echo "Pre-syncing neovim plugins (best-effort)..."
 PATH="${HOME}/.local/bin:${PATH}" timeout 120 nvim --headless "+Lazy! sync" +qa 2>/dev/null || true
 
+
+# Configure delta as default git pager
+git config --global core.pager delta
+git config --global interactive.diffFilter "delta --color-only"
+git config --global delta.navigate true
+git config --global delta.dark true
+git config --global merge.conflictStyle zdiff3
 
 echo -e "\nAll done!"
 echo "If this is the first time installing powerline10k, run 'p10k configure' to install Meslo Nerd font."
