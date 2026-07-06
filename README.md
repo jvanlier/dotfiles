@@ -78,9 +78,5 @@ underlying pref key is keyboard-specific (embeds the keyboard's vendor/product I
 
 ## Known issues
 
-- Resize bug in iTerm 2 with powerline10k: while resizing with the mouse, the prompt gets redrawn multiple times.
-  There's a [mitigation](https://github.com/romkatv/powerlevel10k#horrific-mess-when-resizing-terminal-window) that involves disabling all right hand side elements.
-  Better mitigation: just do not use mouse resize.
-  Use Rectangle on Mac.
-- Neovim icons require a full Nerd Font. Set iTerm2 terminal font to **JetBrainsMono Nerd Font** (installed by bootstrap): Profiles → Text → Font. The Meslo NF font installed by `p10k configure` only covers p10k glyphs and is not sufficient for nvim icons.
+- Neovim icons require a full Nerd Font. Set iTerm2 terminal font to **JetBrainsMono Nerd Font** (installed by bootstrap): Profiles → Text → Font. Starship's prompt glyphs also need a Nerd Font.
 - On arm64 Linux, the bootstrap automatically installs the `nvim-linux-arm64.tar.gz` tarball.

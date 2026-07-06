@@ -202,6 +202,16 @@ else
 fi
 
 
+# Starship: cross-shell prompt (replaces powerlevel10k). Not reliably packaged in
+# apt, so install via the official script.
+if ! command -v starship > /dev/null; then
+    echo "Installing starship..."
+    curl -sS https://starship.rs/install.sh | sh -s -- -y
+else
+    echo "starship already installed: $(starship --version | head -1)"
+fi
+
+
 # Zsh
 echo -e "\nChecking for oh my zsh..."
 
@@ -211,7 +221,6 @@ if [ ! -d "${HOME}/.oh-my-zsh" ]; then
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     echo "Installing oh-my-zsh plugins..."
     git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k"
     git clone --depth=1 https://github.com/peterhurford/git-it-on.zsh "${HOME}/.oh-my-zsh/custom/plugins/git-it-on"
 else
     echo "oh my zsh already installed, skipping"
@@ -223,7 +232,10 @@ if [ -f ~/.zshrc ]; then
     cp ~/.zshrc "${ZSHRC_BAK}"
 fi
 cp dotfiles/.zshrc ~/.zshrc
-cp dotfiles/.p10k.zsh ~/.p10k.zsh
+
+# Starship prompt config:
+mkdir -p "${HOME}/.config"
+cp dotfiles/config/starship.toml ~/.config/starship.toml
 
 # Workaround for a very specific instance where the oh-my-zsh installation post-install chsh does not work:
 if [[ "$(whoami)" == "jovyan" ]] ; then
@@ -258,7 +270,7 @@ git config --global delta.dark true
 git config --global merge.conflictStyle zdiff3
 
 echo -e "\nAll done!"
-echo "If this is the first time installing powerline10k, run 'p10k configure' to install Meslo Nerd font."
+echo "The prompt is now Starship (config: ~/.config/starship.toml). Requires a Nerd Font in your terminal."
 echo -e "\n\nRunning zsh now..."
 
 zsh
