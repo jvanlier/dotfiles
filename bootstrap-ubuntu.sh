@@ -18,7 +18,8 @@ sudo apt install --yes \
     fd-find `# nvim: required by telescope find_files (binary name: fdfind)` \
     ncdu `# ncurses du (find big files/dirs fast)` \
     bat `# cat with syntax highlighting (binary name: batcat on Debian/Ubuntu)` \
-    shellcheck `# shell script linter`
+    shellcheck `# shell script linter` \
+    tmux `# terminal multiplexer`
 
 # Neovim: apt version is too old on Ubuntu 24.04 / Debian 12; install from GitHub release.
 NVIM_VERSION="0.12.2"

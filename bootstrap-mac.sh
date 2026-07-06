@@ -37,7 +37,8 @@ brew install \
     coreutils `# nvim: provides timeout, used during plugin presync` \
     bat `# cat with syntax highlighting and git integration` \
     git-delta `# pretty git diffs` \
-    shellcheck `# shell script linter`
+    shellcheck `# shell script linter` \
+    tmux `# terminal multiplexer`
 brew install --cask \
     font-jetbrains-mono-nerd-font `# nvim: full Nerd Font glyph range for nvim-web-devicons; MesloLGS NF (p10k font) only covers p10k glyphs and relies on macOS font fallback for the rest`
 
