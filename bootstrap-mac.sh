@@ -39,6 +39,7 @@ brew install \
     git-delta `# pretty git diffs` \
     shellcheck `# shell script linter` \
     starship `# cross-shell prompt (replaces powerlevel10k)` \
+    shellcheck `# shell script linter` \
     tmux `# terminal multiplexer`
 brew install --cask \
     font-jetbrains-mono-nerd-font `# full Nerd Font glyph range for nvim-web-devicons and the starship prompt`
