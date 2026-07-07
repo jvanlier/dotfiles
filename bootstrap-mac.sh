@@ -37,9 +37,11 @@ brew install \
     coreutils `# nvim: provides timeout, used during plugin presync` \
     bat `# cat with syntax highlighting and git integration` \
     git-delta `# pretty git diffs` \
-    shellcheck `# shell script linter`
+    shellcheck `# shell script linter` \
+    starship `# cross-shell prompt (replaces powerlevel10k)` \
+    tmux `# terminal multiplexer`
 brew install --cask \
-    font-jetbrains-mono-nerd-font `# nvim: full Nerd Font glyph range for nvim-web-devicons; MesloLGS NF (p10k font) only covers p10k glyphs and relies on macOS font fallback for the rest`
+    font-jetbrains-mono-nerd-font `# full Nerd Font glyph range for nvim-web-devicons and the starship prompt`
 
 # Pyenv
 echo "Checking for pyenv..."
@@ -67,7 +69,6 @@ if [ ! -d "${HOME}/.oh-my-zsh" ]; then
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     echo "Installing oh-my-zsh plugins..."
     git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k"
     git clone --depth=1 https://github.com/peterhurford/git-it-on.zsh "${HOME}/.oh-my-zsh/custom/plugins/git-it-on"
 else
     echo "oh my zsh already installed, skipping"
@@ -79,7 +80,10 @@ if [ -f ~/.zshrc ]; then
     cp ~/.zshrc "${ZSHRC_BAK}"
 fi
 cp dotfiles/.zshrc ~/.zshrc
-cp dotfiles/.p10k.zsh ~/.p10k.zsh
+
+# Starship prompt config:
+mkdir -p "${HOME}/.config"
+cp dotfiles/config/starship.toml ~/.config/starship.toml
 
 
 # Neovim
@@ -144,6 +148,7 @@ defaults write com.knollsoft.Rectangle subsequentExecutionMode  -int 1
 open -a Rectangle
 
 echo -e "\nAll done!"
+echo "The prompt is now Starship (config: ~/.config/starship.toml). Requires a Nerd Font."
 echo "If this is the first time setting up iTerm2, set the font to 'JetBrainsMono Nerd Font' in iTerm2 → Settings → Profiles → Text → Font."
 echo "To remap Caps Lock to Escape: System Settings → Keyboard → Keyboard Shortcuts → Modifier Keys → set Caps Lock key to Escape."
 echo -e "You will also have to reboot to enable repeating keys.\n\nRunning zsh now..."
