@@ -203,10 +203,13 @@ fi
 
 
 # Starship: cross-shell prompt (replaces powerlevel10k). Not reliably packaged in
-# apt, so install via the official script.
+# apt, so install via the official script. Install to ~/.local/bin (already on
+# PATH, same as fd/bat/tree-sitter) so no sudo is needed - the default
+# /usr/local/bin target requires a tty for sudo and fails in headless/CI builds.
 if ! command -v starship > /dev/null; then
     echo "Installing starship..."
-    curl -sS https://starship.rs/install.sh | sh -s -- -y
+    mkdir -p "${HOME}/.local/bin"
+    curl -sS https://starship.rs/install.sh | sh -s -- -y -b "${HOME}/.local/bin"
 else
     echo "starship already installed: $(starship --version | head -1)"
 fi
