@@ -160,6 +160,16 @@ else
     echo "node already installed: $(node --version)"
 fi
 
+# Claude Code: pyright-lsp plugin needs pyright-langserver on PATH for Python
+# code intelligence (type-aware diagnostics, go-to-definition). Separate from
+# Mason's basedpyright, which is Neovim-only.
+if ! command -v pyright-langserver > /dev/null; then
+    echo "Installing pyright (provides pyright-langserver for Claude Code)..."
+    sudo npm install -g pyright
+else
+    echo "pyright-langserver already installed: $(pyright-langserver --version)"
+fi
+
 # Install Pyenv
 # POD_NAME check is to automatically skip pyenv when inside a k8s pod (generally not needed there).
 if [[ "${POD_NAME:=NONE}" == "NONE" ]] && [[ ! "${SKIP_PYENV:=0}" == "1"  ]] ; then
