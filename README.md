@@ -21,7 +21,9 @@ On Debian or Ubuntu:
 ## Git
 
 The bootstrap deploys global Git attributes to `~/.config/git/attributes`, including
-Markdown-aware diff hunk headers for `*.md` files. This affects diff presentation only;
+Markdown-aware diff hunk headers for `*.md` files. Git's generic diff heuristic can choose
+unrelated prose instead of nearby Markdown headings; this rule gives the `delta` pager
+useful section context when rendering diffs. This affects diff presentation only;
 repository-local attributes can override it.
 
 ## Neovim
