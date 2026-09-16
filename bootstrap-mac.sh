@@ -117,6 +117,11 @@ defaults write -g ApplePressAndHoldEnabled -bool false
 defaults write -g KeyRepeat -int 2
 defaults write -g InitialKeyRepeat -int 20
 
+# Deploy global Git attributes and configure Markdown-aware diffs.
+mkdir -p "${HOME}/.config/git"
+cp dotfiles/config/git/attributes "${HOME}/.config/git/attributes"
+git config --global core.attributesFile "${HOME}/.config/git/attributes"
+
 # Configure delta as default git pager
 git config --global core.pager delta
 git config --global interactive.diffFilter "delta --color-only"
