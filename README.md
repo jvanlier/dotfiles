@@ -18,6 +18,12 @@ On Debian or Ubuntu:
 ```
 
 
+## Git
+
+The bootstrap deploys global Git attributes to `~/.config/git/attributes`, including
+Markdown-aware diff hunk headers for `*.md` files. This affects diff presentation only;
+repository-local attributes can override it.
+
 ## Neovim
 
 Config is deployed to `~/.config/nvim/` from `dotfiles/config/nvim/`.

@@ -275,6 +275,11 @@ echo "Pre-syncing neovim plugins (best-effort)..."
 PATH="${HOME}/.local/bin:${PATH}" timeout 120 nvim --headless "+Lazy! sync" +qa 2>/dev/null || true
 
 
+# Deploy global Git attributes and configure Markdown-aware diffs.
+mkdir -p "${HOME}/.config/git"
+cp dotfiles/config/git/attributes "${HOME}/.config/git/attributes"
+git config --global core.attributesFile "${HOME}/.config/git/attributes"
+
 # Configure delta as default git pager
 git config --global core.pager delta
 git config --global interactive.diffFilter "delta --color-only"
