@@ -128,8 +128,11 @@ git config --global interactive.diffFilter "delta --color-only"
 git config --global delta.navigate true
 git config --global delta.dark true
 git config --global delta.syntax-theme zenburn
-git config --global delta.file-style '#dcdccc'
-git config --global delta.hunk-header-line-number-style '#d2d39b'
+git config --global delta.file-style '#8cd0d3'
+git config --global delta.file-decoration-style '#8cd0d3 ul'
+git config --global delta.hunk-header-decoration-style '#8cd0d3 box'
+git config --global delta.hunk-header-file-style '#8cd0d3'
+git config --global delta.hunk-header-line-number-style '#8cd0d3'
 git config --global merge.conflictStyle zdiff3
 
 # Rectangle: deploy custom window-snapping shortcuts (tuned for Kinesis Advantage 2 layout).

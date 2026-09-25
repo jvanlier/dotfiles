@@ -24,10 +24,9 @@ The bootstrap deploys global Git attributes to `~/.config/git/attributes`, inclu
 Markdown-aware diff hunk headers for `*.md` files. Git's generic diff heuristic can choose
 unrelated prose instead of nearby Markdown headings; this rule gives the `delta` pager
 useful section context when rendering diffs. The bootstrap also selects Delta's built-in
-`zenburn` syntax theme, matching the Zenburn theme used by Neovim. The file name and
-hunk line number use readable Zenburn foreground colors while the default Delta boxes
-and lines remain. This affects diff presentation only; repository-local attributes can
-override it.
+`zenburn` syntax theme, matching the Zenburn theme used by Neovim. File names, hunk
+markers, line numbers, and Delta's existing boxes and lines use Zenburn's light-blue
+`#8cd0d3`. This affects diff presentation only; repository-local attributes can override it.
 
 ## Neovim
 
