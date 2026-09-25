@@ -17,6 +17,10 @@ On Debian or Ubuntu:
 ./bootstrap-ubuntu.sh
 ```
 
+The bootstrap installs both [`prek`](https://github.com/j178/prek), the preferred faster
+pre-commit-compatible runner, and `pre-commit` for backwards compatibility. Use `prek`
+with the existing `.pre-commit-config.yaml`; `pre-commit` remains available when needed.
+
 
 ## Git
 
