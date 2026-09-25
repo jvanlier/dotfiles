@@ -88,6 +88,9 @@ export EDITOR=nvim
 alias vim=nvim
 alias vi=nvim
 
+# Bat:
+export BAT_THEME=zenburn
+
 # Kube:
 alias k=kubectl
 # List nodes with instance type, sorted by time:
