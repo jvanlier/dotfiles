@@ -44,21 +44,21 @@ If that fails (network restrictions), ruff still works without node.
 
 ### Key bindings (leader = Space)
 
-| Key | Action |
-|-----|--------|
-| `<leader>ff` | Find files |
-| `<leader>fg` | Live grep |
-| `<leader>fb` | Buffers |
-| `<leader>e`  | Toggle file tree |
-| `<leader>xx` | Diagnostics panel |
-| `<leader>db` | Toggle breakpoint |
-| `<leader>dc` | Start / continue debug |
-| `<leader>du` | Toggle debug UI |
-| `gd` | Goto definition |
-| `K`  | Hover docs |
-| `<leader>cf` | Format buffer |
-| `s` / `S` | Flash jump / treesitter jump |
-| `<C-h/j/k/l>` | Window navigation |
+| Key           | Action                       |
+|---------------|------------------------------|
+| `<leader>ff`  | Find files                   |
+| `<leader>fg`  | Live grep                    |
+| `<leader>fb`  | Buffers                      |
+| `<leader>e`   | Toggle file tree             |
+| `<leader>xx`  | Diagnostics panel            |
+| `<leader>db`  | Toggle breakpoint            |
+| `<leader>dc`  | Start / continue debug       |
+| `<leader>du`  | Toggle debug UI              |
+| `gd`          | Goto definition              |
+| `K`           | Hover docs                   |
+| `<leader>cf`  | Format buffer                |
+| `s` / `S`     | Flash jump / treesitter jump |
+| `<C-h/j/k/l>` | Window navigation            |
 
 ### First launch checklist
 
