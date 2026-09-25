@@ -285,6 +285,9 @@ git config --global core.pager delta
 git config --global interactive.diffFilter "delta --color-only"
 git config --global delta.navigate true
 git config --global delta.dark true
+git config --global delta.syntax-theme zenburn
+git config --global delta.file-style '#dcdccc'
+git config --global delta.hunk-header-line-number-style '#d2d39b'
 git config --global merge.conflictStyle zdiff3
 
 echo -e "\nAll done!"
