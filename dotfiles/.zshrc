@@ -91,6 +91,9 @@ alias vi=nvim
 # Bat:
 export BAT_THEME=zenburn
 
+# Make Docker builds readable on dark background (default is dark blue):
+export BUILDKIT_COLORS='run=140,208,211:cancel=140,208,211'
+
 # Kube:
 alias k=kubectl
 # List nodes with instance type, sorted by time:
