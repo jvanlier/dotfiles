@@ -40,8 +40,7 @@ brew install \
     shellcheck `# shell script linter` \
     starship `# cross-shell prompt (replaces powerlevel10k)` \
     shellcheck `# shell script linter` \
-    tmux `# terminal multiplexer` \
-    pyright `# Claude Code: pyright-lsp plugin needs pyright-langserver on PATH for Python code intelligence (type-aware diagnostics, go-to-def; separate from Mason's basedpyright which is Neovim-only)`
+    tmux `# terminal multiplexer`
 brew install --cask \
     font-jetbrains-mono-nerd-font `# full Nerd Font glyph range for nvim-web-devicons and the starship prompt`
 
