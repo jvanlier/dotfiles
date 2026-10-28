@@ -17,7 +17,12 @@ plugins=(
   fzf
 )
 
+# Use GNU ls when available on macOS so broken symlinks can be colored.
+zstyle ':omz:lib:theme-and-appearance' gnu-ls yes
 source $ZSH/oh-my-zsh.sh
+
+# Highlight broken symlinks and their missing targets in red.
+export LS_COLORS="${LS_COLORS:+${LS_COLORS}:}or=01;31:mi=01;31"
 
 # User configuration
 #
