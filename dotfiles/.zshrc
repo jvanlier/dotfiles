@@ -19,6 +19,10 @@ plugins=(
 
 # Use GNU ls when available on macOS so broken symlinks can be colored.
 zstyle ':omz:lib:theme-and-appearance' gnu-ls yes
+
+# Extra completion dirs, picked up by oh-my-zsh's compinit ((N) skips missing ones):
+fpath=( ~/.zfunc(N) /opt/homebrew/share/zsh/site-functions(N) $fpath )
+
 source $ZSH/oh-my-zsh.sh
 
 # Highlight broken symlinks and their missing targets in red.
