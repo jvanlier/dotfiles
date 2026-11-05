@@ -48,7 +48,7 @@ brew install --cask \
 echo "Checking for pyenv..."
 if ! command -v pyenv > /dev/null ; then
     echo "Looks like pyenv is not installed, proceeding with install through brew."
-    brew install pyenv pyenv-virtualenv
+    brew install pyenv
 else
     echo "pyenv seems to be installed"
 fi
