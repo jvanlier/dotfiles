@@ -143,7 +143,7 @@ format = '[[ $symbol( $context) ](fg:background bg:blue)]($style)'
 disabled = false
 time_format = "%R"
 style = "bg:blue"
-format = '[[  $time ](fg:background bg:blue)]($style)'
+format = '[[ $time ](fg:background bg:blue)]($style)'
 
 [line_break]
 disabled = false
