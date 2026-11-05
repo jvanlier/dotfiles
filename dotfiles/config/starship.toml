@@ -131,7 +131,10 @@ format = '[[ $symbol( $version) ](fg:background bg:green)]($style)'
 [python]
 symbol = ""
 style = "bg:green"
-format = '[[ $symbol( $version)(\(#$virtualenv\)) ](fg:background bg:green)]($style)'
+# No $version: getting it runs `python --version` through the pyenv shim, which spawns
+# dozens of processes. With endpoint security scanning each one, that takes 0.3-1s per
+# prompt and can exceed command_timeout. Without $version, Starship never runs Python.
+format = '[[ $symbol(\(#$virtualenv\)) ](fg:background bg:green)]($style)'
 
 [docker_context]
 symbol = ""
