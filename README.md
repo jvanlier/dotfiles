@@ -22,6 +22,21 @@ pre-commit-compatible runner, and `pre-commit` for backwards compatibility. Use 
 with the existing `.pre-commit-config.yaml`; `pre-commit` remains available when needed.
 
 
+## Shell prompt
+
+Starship uses a Zenburn palette matching Neovim, Bat, and Git diffs, with colors from
+[zenburn.nvim](https://github.com/phha/zenburn.nvim). The segmented prompt keeps its
+existing layout and uses muted red, orange, yellow, green, and blue.
+
+Both bootstraps deploy `dotfiles/config/starship.toml`. To apply only the prompt config:
+
+```sh
+cp dotfiles/config/starship.toml ~/.config/starship.toml
+```
+
+The next prompt uses the new colors. Terminal background and application interface
+colors are configured separately in your terminal application.
+
 ## Git
 
 The bootstrap deploys global Git attributes to `~/.config/git/attributes`, including
