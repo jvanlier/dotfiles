@@ -98,6 +98,18 @@ are bound — all other Rectangle actions stay unbound.
 To change them: edit a binding in Rectangle's Settings, then read the new value with
 `defaults read com.knollsoft.Rectangle <action>` and update the matching line in `bootstrap-mac.sh`.
 
+## Caps Lock → Escape (macOS)
+
+Set manually via **System Settings → Keyboard → Keyboard Shortcuts → Modifier Keys**:
+set the Caps Lock key to Escape. This persists across reboots. Not scripted because the
+underlying pref key is keyboard-specific (embeds the keyboard's vendor/product ID).
+`bootstrap-mac.sh` prints a reminder of this step at the end.
+
+## Known issues
+
+- Neovim icons require a full Nerd Font. Set iTerm2 terminal font to **JetBrainsMono Nerd Font** (installed by bootstrap): Profiles → Text → Font. Starship's prompt glyphs also need a Nerd Font.
+- On arm64 Linux, the bootstrap automatically installs the `nvim-linux-arm64.tar.gz` tarball.
+
 ## Herdr (macOS)
 
 `bootstrap-mac.sh` installs the [Herdr](https://herdr.dev) app (Homebrew cask `herdr-app`)
@@ -132,15 +144,3 @@ herdr-app check ~/.config/herdr-app/mods/spaces-bare
 ```
 
 Then copy both back into `dotfiles/config/herdr-app/`.
-
-## Caps Lock → Escape (macOS)
-
-Set manually via **System Settings → Keyboard → Keyboard Shortcuts → Modifier Keys**:
-set the Caps Lock key to Escape. This persists across reboots. Not scripted because the
-underlying pref key is keyboard-specific (embeds the keyboard's vendor/product ID).
-`bootstrap-mac.sh` prints a reminder of this step at the end.
-
-## Known issues
-
-- Neovim icons require a full Nerd Font. Set iTerm2 terminal font to **JetBrainsMono Nerd Font** (installed by bootstrap): Profiles → Text → Font. Starship's prompt glyphs also need a Nerd Font.
-- On arm64 Linux, the bootstrap automatically installs the `nvim-linux-arm64.tar.gz` tarball.
