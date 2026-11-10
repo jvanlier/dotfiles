@@ -98,6 +98,41 @@ are bound — all other Rectangle actions stay unbound.
 To change them: edit a binding in Rectangle's Settings, then read the new value with
 `defaults read com.knollsoft.Rectangle <action>` and update the matching line in `bootstrap-mac.sh`.
 
+## Herdr (macOS)
+
+`bootstrap-mac.sh` installs the [Herdr](https://herdr.dev) app (Homebrew cask `herdr-app`)
+and, if missing, herdr-core (`hc`) via the official installer. Both update themselves after that.
+
+It also deploys one personal customisation from `dotfiles/config/herdr-app/` to
+`~/.config/herdr-app/`: in bare-repo worktree layouts
+(`repo/.git` is a bare repo, worktrees beside it), the spaces sidebar names every worktree
+after its repo, with the branch in gray (`dotfiles  master`, `dotfiles  feature-x`)
+instead of the worktree folder (`master`). Other repos and spaces you renamed are unchanged.
+
+- `mods/spaces-bare/`: a copy of Herdr's shipped `spaces` sidebar mod, edited (search for `bare`).
+- `layouts/main-bare.json`: a copy of the shipped `main` layout, using `spaces-bare` instead of `spaces`.
+
+The bootstrap switches to the layout when Herdr is running; otherwise run
+`herdr-app do layout.switch --name main-bare` once. `cmd-shift-l` cycles layouts.
+
+Not set up by `bootstrap-ubuntu.sh`: that one targets headless machines and the Docker CI.
+
+### Drift
+
+Both files are snapshots of Herdr 0.1.14's shipped versions (see `cloned_from`) and do not
+follow later Herdr updates to `spaces` or `main`. Versions are not pinned: the app updates
+itself and herdr-core with no way to opt out. When an update breaks the mod, or you want
+upstream's changes, re-create the copies and re-apply the edits:
+
+```sh
+herdr-app do mod.clone --name spaces --as spaces-bare     # remove the old copy first
+herdr-app do layout.clone --name main --as main-bare      # then set the spaces block's mod to spaces-bare
+# re-apply the edits in main.js: diff the old copy against ~/.config/herdr-app/mods/spaces/main.js
+herdr-app check ~/.config/herdr-app/mods/spaces-bare
+```
+
+Then copy both back into `dotfiles/config/herdr-app/`.
+
 ## Caps Lock → Escape (macOS)
 
 Set manually via **System Settings → Keyboard → Keyboard Shortcuts → Modifier Keys**:
