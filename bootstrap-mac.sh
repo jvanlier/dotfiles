@@ -162,20 +162,11 @@ defaults write com.knollsoft.Rectangle subsequentExecutionMode  -int 1
 open -a Rectangle
 
 # Herdr: the app needs herdr-core (`hc`), which runs the terminals. Install it once;
-# after that the app keeps it current. Then deploy the personal mod and layout.
+# after that the app keeps it current.
 echo -e "\nConfiguring Herdr..."
 if [ ! -e "${HOME}/.local/bin/herdr-core" ] && ! command -v herdr-core > /dev/null; then
     curl -fsSL https://releases.herdr.dev/core/install.sh | sh
 fi
-HERDR_APP_DIR="${HOME}/.config/herdr-app"
-mkdir -p "${HERDR_APP_DIR}/mods" "${HERDR_APP_DIR}/layouts"
-rm -rf "${HERDR_APP_DIR}/mods/spaces-bare"
-cp -r dotfiles/config/herdr-app/mods/spaces-bare "${HERDR_APP_DIR}/mods/spaces-bare"
-cp dotfiles/config/herdr-app/layouts/main-bare.json "${HERDR_APP_DIR}/layouts/main-bare.json"
-herdr-app check "${HERDR_APP_DIR}/mods/spaces-bare"
-# Only works while the app is open; otherwise switch once by hand (see README).
-herdr-app "do" layout.switch --name main-bare > /dev/null 2>&1 \
-    || echo "Herdr is not running: open it, then run 'herdr-app do layout.switch --name main-bare'."
 
 echo -e "\nAll done!"
 echo "The prompt is now Starship (config: ~/.config/starship.toml). Requires a Nerd Font."
