@@ -117,12 +117,4 @@ and, if missing, herdr-core (`hc`) via the official installer. Both update thems
 
 Herdr uses its standard layout and spaces sidebar, consistent with the mobile app.
 
-If you previously installed the repo-named spaces customisation, open Herdr and run:
-
-```sh
-herdr-app do layout.switch --name main
-rm -rf ~/.config/herdr-app/mods/spaces-bare
-rm -f ~/.config/herdr-app/layouts/main-bare.json
-```
-
 Not set up by `bootstrap-ubuntu.sh`: that one targets headless machines and the Docker CI.
